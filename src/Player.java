@@ -7,6 +7,7 @@ public class Player {
 	ArrayList<Card> hand = new ArrayList<Card>();
 	Deck deck;
 	Game game;
+	Card card;
 
 	public Player(Deck deck, Game game) {
 		this.deck = deck;
@@ -17,8 +18,9 @@ public class Player {
 		return hand;
 	}
 
-	public void setHand(ArrayList<Card> hand) {
-		this.hand = hand;
+	public void setHand(Card temp) {
+		
+		hand.add(temp);
 	}
 
 	/*******************************************************************************************************************
@@ -28,7 +30,7 @@ public class Player {
     *******************************************************************************************************************/
 	public boolean goFish(Rank request) {
 		
-		Card card = deck.drawCard();
+		 card = deck.drawCard();
 		hand.add(card);
 		
 		if(card.rank == request)
