@@ -11,6 +11,7 @@ public class Player {
 	public Player(Deck deck, Game game) {
 		this.deck = deck;
 		this.game = game;
+		score = 0;
 	}
 
 	public ArrayList<Card> getHand() {
@@ -72,6 +73,50 @@ public class Player {
 			}			
 		}
 		return bookFound;
+	}
+	
+	/*******************************************************************************************************************
+    Ask another player for any cards of the given rank
+    @return An ArrayList containing the requested cards. If the other player has none of the requested
+    cards an empty array is returned. 
+    @param request The card the player requested from another player.
+    @param other The player the request is being made of
+    *******************************************************************************************************************/
+	public ArrayList<Card> requestCard(Rank request, Player other){
+		ArrayList<Card> requestedCards = new ArrayList<Card>();
+		int numCards = other.checkForCard(request);
+		if(numCards == 0)
+			return requestedCards;
+		else {
+			for(int i = 0; i < numCards; i++) {
+				
+			}
+		}
+	}
+	
+	
+	/*******************************************************************************************************************
+    Checks this player's hand for the requested card.
+    @return The number of cards of the given rank in this player's hand
+    @param request The card rank the other player would like
+    *******************************************************************************************************************/
+	public int checkForCard(Rank request) {
+		int numCards = 0;
+		for(int i = 0; i < hand.size(); i++) {
+			if(hand.get(i).getRank() == request) 
+				numCards++;		
+		}
+		return numCards;
+	}
+	
+	
+	/*******************************************************************************************************************
+    Draws a card from the deck and adds it to the player's hand
+    @return True if the player draws the card they asked for.
+    @param request The card the player requested from another player.
+    *******************************************************************************************************************/
+	public Card giveCard(Rank request) {
+		
 	}
 
 }
