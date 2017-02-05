@@ -5,6 +5,7 @@ public class AiPlayer {
 	ArrayList<Card> hand = new ArrayList<Card>();
 	Deck deck;
 	Game game; 
+	Card card;
 	
 	public AiPlayer(Deck deck, Game game){
 		this.deck = deck;
@@ -15,7 +16,20 @@ public class AiPlayer {
 		return hand;
 	}
 	
-	public void setHand(ArrayList<Card> hand){
-		this.hand = hand;
+	public void setHand(Card temp){
+		
+		hand.add(temp);
 	}
+	
+	public void goFish(){
+		
+		card = deck.drawCard();
+		hand.add(card);
+	}
+	
+	
+	
 }
+
+
+

@@ -7,6 +7,7 @@ public class Game {
 	Deck deck = new Deck();
 	Player player = new Player(deck, this);
 	
+	Scanner reader = new Scanner(System.in);  // Reading from System.in
 	public Game(){
 	}
 	
@@ -22,11 +23,11 @@ public class Game {
 		System.out.println("The human player starts first.");
 		String n = "S";
 	while(n == "S"){	
-		Scanner reader = new Scanner(System.in);  // Reading from System.in
+		
 		System.out.println("Type any letter to continue");
-		 n = reader.next(); // Scans the next token of the input as an int.
+		 n = game.reader.next(); // Scans the next token of the input as a Char.
 	}
-	
+
 		System.out.println("Lets begin.");
 		
 		for( int L = 0; L < 5; L++ ){
@@ -81,9 +82,15 @@ public class Game {
 		game.player.checkForBook();
 		System.out.println("");
 		
-		
-		for(int i = 0; i < game.player.getHand().size(); i++) {
-			System.out.println(game.player.getHand().get(i).toString());		
+		int N = 0;
+		while(N != 999){	
+			String rankAsked;
+			System.out.println("What card would you like to ask for?");
+			System.out.println("What Rank? ");
+			 rankAsked = game.reader.next(); // Scans the next token of the input as a Char.
+			 Rank temp = Rank.valueOf(rankAsked.toUpperCase());
+			 game.player.goFish(temp);
+			 
 		}
 		
 		
