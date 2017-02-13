@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Player {
 	
@@ -12,6 +11,10 @@ public class Player {
 	public Player(Deck deck, Game game) {
 		this.deck = deck;
 		this.game = game;
+	}
+	
+	public int getScore(){
+		return score;
 	}
 
 	public ArrayList<Card> getHand() {
@@ -51,16 +54,17 @@ public class Player {
 		
 		//for each card in the player's hand loop through every other card and compare ranks
 		for(int  i = 0; i < hand.size(); i++) {
-			for(int j = 0; j < hand.size(); j++) {
+			for(int j = i; j < hand.size(); j++) {
 				
 				//if another card's rank matches the target card's rank add it to an array
 				if(hand.get(i).getRank() == hand.get(j).getRank() && hand.get(i).getSuit() != hand.get(j).getSuit()) {
 					remove.add(hand.get(j));
 					
 					//if the number of indices in the array is the size of a book - 1 . . .
-					if(remove.size() == game.getBookSize() - 1) {
+					if(remove.size() == game.getBookSize()-1) {
 						
-						//add the current target's index to the array
+						
+						//adds the target card to the array 
 						remove.add(hand.get(i));
 						
 						//and remove all of the cards from the player's hand
@@ -74,9 +78,27 @@ public class Player {
 			}			
 		}
 		return bookFound;
+		
+		
 	}
 	
+	public Card askCard(Rank tempC){
+		for(int d = 0; d < hand.size(); d++){
+			if(hand.get(d).getRank() == tempC){
+				card = hand.get(d);
+				hand.remove(d);			
+			break;
+			}
+			else{
+				card = null;
+			}
+		}
+		return(card);
+	}
 	
-	
-
+	public void displayHand(){
+		for(int i = 0; i < hand.size(); i++) {
+			System.out.println(hand.get(i).toString());		
+		}
+	}
 }

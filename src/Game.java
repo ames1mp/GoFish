@@ -1,11 +1,14 @@
-import java.util.ArrayList;
+
 import java.util.Scanner;
 
 public class Game {
 	int bookSize = 4;
 	
+	boolean playerTurn = true;
+	
 	Deck deck = new Deck();
 	Player player = new Player(deck, this);
+	AiPlayer Ai = new AiPlayer(deck,this);
 	
 	Scanner reader = new Scanner(System.in);  // Reading from System.in
 	public Game(){
@@ -34,47 +37,14 @@ public class Game {
 			game.player.setHand(game.player.deck.drawCard());
 			
 		}
-		/*
-		for(int i = 0; i < deck.deck.size(); i++) {
-			System.out.println(deck.getDeck().get(i).getRank() + " of " + deck.getDeck().get(i).getSuit());
-		}
-		*/
-		/*
-		Card card;
 		
-		System.out.println("Num cards in decK: " + game.deck.getDeck().size());
-		
-		for(int i = 0; i < 20; i++) {
-			card = game.deck.drawCard();
-			System.out.println(card.toString());
-			System.out.println("Num cards in deck: " + game.deck.getDeck().size());		
+		for( int L = 0; L < 5; L++ ){
+			game.Ai.setHand(game.Ai.deck.drawCard());
+			
 		}
 		
-		*/
-		
-//		ArrayList<Card> hand = new ArrayList<Card>();
-//		
-//		Card card = new Card(Suit.CLUBS, Rank.ACE);
-//		hand.add(card);
-//		
-//		Card card3 = new Card(Suit.DIAMONDS, Rank.ACE);
-//		hand.add(card3);
-//		
-//		Card card1 = new Card(Suit.SPADES, Rank.ACE);
-//		hand.add(card1);
-//		
-//		Card card2 = new Card(Suit.HEARTS, Rank.ACE);
-//		hand.add(card2);
-//		
-//		Card card4 = new Card(Suit.DIAMONDS, Rank.TWO);
-//		hand.add(card4);
-//		
-//		game.player.setHand(hand);
-		
-		for(int i = 0; i < game.player.getHand().size(); i++) {
-			System.out.println(game.player.getHand().get(i).toString());		
-		}
-		
+		game.player.displayHand();
+				
 		if(game.player.checkForBook() == true){
 			System.out.println("you got a point.");
 		}
@@ -83,14 +53,82 @@ public class Game {
 		System.out.println("");
 		
 		int N = 0;
-		while(N != 999){	
-			String rankAsked;
-			System.out.println("What card would you like to ask for?");
-			System.out.println("What Rank? ");
+		while(N != 10){	
+			
+			if(game.player.checkForBook() == true){
+				System.out.println("you got a point.");
+				System.out.println("");
+			}
+			
+			game.player.checkForBook();
+			game.Ai.checkForBook();
+			
+			System.out.println("Player Score: " + game.player.getScore());
+			System.out.println("AI Score: " + game.Ai.getScore());
+			System.out.println("");
+			System.out.println("");
+						
+			System.out.println("Your Hand: ");
+			game.player.displayHand();
+			System.out.println("");
+			
+			game.Ai.displayHand();
+			System.out.println("");
+			String rankAsked = null;
+			Card tempC = null;
+			Rank temp = null;
+			int k = 0;
+			System.out.println("It's your turn ");
+			System.out.println("");
+			System.out.println("What rank of a card would you like to ask for?");
+			System.out.println("");
+			while(k != 1){
 			 rankAsked = game.reader.next(); // Scans the next token of the input as a Char.
-			 Rank temp = Rank.valueOf(rankAsked.toUpperCase());
-			 game.player.goFish(temp);
+			 try {
+		           Rank.valueOf(rankAsked.toUpperCase()); // but this validates with all the enum values
+		           temp = Rank.valueOf(rankAsked.toUpperCase());
+		           k = 1;
+		        } catch (IllegalArgumentException e) {
+		           System.out.println("invalid option, please try another. ");
+		        } 
+			}
+			
+			
+			
+			 tempC = game.Ai.askCard(temp);
 			 
+			
+			 if(tempC != null){
+				 game.player.hand.add(tempC);
+				 game.playerTurn = false;
+			 }
+			 else{
+				 System.out.println("Ai did not have the card you were looking for ");
+				 System.out.println("Go Fish! ");
+				 System.out.println(""); 
+				 if(game.player.goFish(temp) == true){
+				 
+				game.playerTurn = true;
+			 }
+			 else{
+				 game.playerTurn = false;
+			 }
+			 
+			 }
+			 if(game.playerTurn != true){
+			 temp = game.Ai.AiTurn();
+			 tempC = game.player.askCard(temp);
+			 if(tempC != null){
+				 game.Ai.hand.add(tempC);
+			 }
+			 else{
+				 game.Ai.goFish(temp);
+			 }
+			 
+			 }
+			 
+			 
+			 N++;
 		}
 		
 		
