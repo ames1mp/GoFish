@@ -1,34 +1,38 @@
 import java.util.*;
-public class AiPlayer {
+public class AiPlayer extends Player {
 
-	int score;
-	ArrayList<Card> hand = new ArrayList<Card>();
-	Deck deck;
-	Game game; 
-	Card card;
-	
-	public AiPlayer(Deck deck, Game game){
-		this.deck = deck;
-		this.game = game;
+	public AiPlayer(Deck deck, Game game) {
+		super(deck, game);
 	}
-	
-	public ArrayList<Card> getHand(){
-		return hand;
-	}
-	
-	public void setHand(Card temp){
+
+	public Rank AiTurn(){
+		Rank tempR = null;
 		
-		hand.add(temp);
-	}
-	
-	public void goFish(){
+		ArrayList<Rank> aiChoice = new ArrayList<Rank>();
 		
-		card = deck.drawCard();
-		hand.add(card);
+		//for each card in the player's hand loop through every other card and compare ranks
+		for(int  i = 0; i < hand.size(); i++) {
+			for(int j = i; j < hand.size(); j++) {
+				
+				//if another card's rank matches the target card's rank add it to an array
+				if(hand.get(i).getRank() == hand.get(j).getRank() && hand.get(i).getSuit() != hand.get(j).getSuit()) {
+					aiChoice.add(hand.get(j).getRank());		
+						
+						//add the current target's index to the array
+						aiChoice.add(hand.get(i).getRank());
+						tempR = aiChoice.get(i);
+				}
+	
+			}
+		}
+		
+		if(tempR == null){
+			tempR = hand.get(0).getRank();
+		}
+		
+		System.out.println("Do you have any: " + tempR);
+		return tempR;
 	}
-	
-	
-	
 }
 
 
