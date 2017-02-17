@@ -37,7 +37,7 @@ public class Game {
 			game.player.setHand(game.player.deck.drawCard());
 			
 		}
-		
+		four
 		for( int L = 0; L < 5; L++ ){
 			game.Ai.setHand(game.Ai.deck.drawCard());
 			

@@ -6,11 +6,11 @@ public class Player {
 	ArrayList<Card> hand = new ArrayList<Card>();
 	Deck deck;
 	Game game;
+	Card card;
 
 	public Player(Deck deck, Game game) {
 		this.deck = deck;
 		this.game = game;
-		score = 0;
 	}
 	
 	public int getScore(){
@@ -21,8 +21,9 @@ public class Player {
 		return hand;
 	}
 
-	public void setHand(ArrayList<Card> hand) {
-		this.hand = hand;
+	public void setHand(Card temp) {
+		
+		hand.add(temp);
 	}
 
 	/*******************************************************************************************************************
@@ -32,7 +33,7 @@ public class Player {
     *******************************************************************************************************************/
 	public boolean goFish(Rank request) {
 		
-		Card card = deck.drawCard();
+		 card = deck.drawCard();
 		hand.add(card);
 		
 		if(card.rank == request)
@@ -61,8 +62,7 @@ public class Player {
 					
 					//if the number of indices in the array is the size of a book - 1 . . .
 					if(remove.size() == game.getBookSize()-1) {
-						
-						
+											
 						//adds the target card to the array 
 						remove.add(hand.get(i));
 						
@@ -74,59 +74,14 @@ public class Player {
 						break;						
 					}
 				}
-			}			
+			}
+			remove.clear();
 		}
 		return bookFound;
 		
 		
 	}
 	
-<<<<<<< HEAD
-	/*******************************************************************************************************************
-    Ask another player for any cards of the given rank
-    @return An ArrayList containing the requested cards. If the other player has none of the requested
-    cards an empty array is returned. 
-    @param request The card the player requested from another player.
-    @param other The player the request is being made of
-    *******************************************************************************************************************/
-	public ArrayList<Card> requestCard(Rank request, Player other){
-		ArrayList<Card> requestedCards = new ArrayList<Card>();
-		int numCards = other.checkForCard(request);
-		if(numCards == 0)
-			return requestedCards;
-		else {
-			for(int i = 0; i < numCards; i++) {
-				
-			}
-		}
-	}
-	
-	
-	/*******************************************************************************************************************
-    Checks this player's hand for the requested card.
-    @return The number of cards of the given rank in this player's hand
-    @param request The card rank the other player would like
-    *******************************************************************************************************************/
-	public int checkForCard(Rank request) {
-		int numCards = 0;
-		for(int i = 0; i < hand.size(); i++) {
-			if(hand.get(i).getRank() == request) 
-				numCards++;		
-		}
-		return numCards;
-	}
-	
-	
-	/*******************************************************************************************************************
-    Draws a card from the deck and adds it to the player's hand
-    @return True if the player draws the card they asked for.
-    @param request The card the player requested from another player.
-    *******************************************************************************************************************/
-	public Card giveCard(Rank request) {
-		
-	}
-
-=======
 	public Card askCard(Rank tempC){
 		for(int d = 0; d < hand.size(); d++){
 			if(hand.get(d).getRank() == tempC){
@@ -146,5 +101,4 @@ public class Player {
 			System.out.println(hand.get(i).toString());		
 		}
 	}
->>>>>>> origin/master
 }
