@@ -1,134 +1,170 @@
 
 import java.util.Scanner;
 
+/**
+ *
+ * @author Lanndon Rose
+ * @author Michael Ames
+ */
 public class Game {
-	int bookSize = 4;
+/**
+ *sets the number of cards need to get a point.
+ */
+private int bookSize = 3;
+
+/**
+ * variable for whether or not it is the players turn.
+ */
+private boolean playerTurn = true;
+
+/**
+ * instantiates a deck of cards.
+ */
+private Deck deck = new Deck();
+
+/**
+ * instantiates a new human player.
+ */
+private Player player = new Player(deck, this);
+
+/**
+ * instantiates a new AI player.
+ */
+private AiPlayer ai = new AiPlayer(deck, this);
+
+/**
+ * scanner for taking in user input.
+ */
+private Scanner reader = new Scanner(System.in);
+
+/**
+ * method for returning number of same cards needed to gain a point.
+ * @return booksize - number of cards needed
+ */
+public int getBookSize() {
+return bookSize;
+}
 	
-	boolean playerTurn = true;
-	
-	Deck deck = new Deck();
-	Player player = new Player(deck, this);
-	AiPlayer Ai = new AiPlayer(deck,this);
-	
-	Scanner reader = new Scanner(System.in);  // Reading from System.in
-	public Game(){
-	}
-	
-	public int getBookSize() {
-		return bookSize;
-	}
-	
-	public static void main(String[] args) {
+	/**
+	 * The main method for playing GoFish.
+	 * @param args basic for main method
+	 */
+	public static void main(final String[] args) {
 		Game game = new Game();
 		
 		System.out.println("Welcome to Gofish");
-		System.out.println("This version is single player, so you will being playing an AI.");
+		System.out.println("This version is single player, ");
+		System.out.println("so you will being playing an AI.");
 		System.out.println("The human player starts first.");
 		String n = "S";
-	while(n == "S"){	
+	while (!n.equals("b")) {
 		
-		System.out.println("Type any letter to continue");
-		 n = game.reader.next(); // Scans the next token of the input as a Char.
+		System.out.println("Press B then Enter to begin");
+		// Scans the next token of the input as a Char.
+		 n = game.reader.next(); 
 	}
 
 		System.out.println("Lets begin.");
-		
-		for( int L = 0; L < 5; L++ ){
+		//adds seven cards to the players hand
+		for (int l = 0; l < 7; l++) {
 			game.player.setHand(game.player.deck.drawCard());
 			
 		}
-		four
-		for( int L = 0; L < 5; L++ ){
-			game.Ai.setHand(game.Ai.deck.drawCard());
+		//adds seven cards to the AI players hand
+		for (int l = 0; l < 7; l++) {
+			game.ai.setHand(game.ai.deck.drawCard());
 			
 		}
-		
-		game.player.displayHand();
-				
-		if(game.player.checkForBook() == true){
+	//checks to see if user got a point at the start of the game
+		if (game.player.checkForBook() == true) {
 			System.out.println("you got a point.");
 		}
 		
 		game.player.checkForBook();
 		System.out.println("");
-		
-		int N = 0;
-		while(N != 10){	
+
+	//games is over when the deck has no cards left
+		while (game.deck.getSize() != 0) {	
 			
-			if(game.player.checkForBook() == true){
+			if (game.player.checkForBook() == true) {
 				System.out.println("you got a point.");
 				System.out.println("");
 			}
 			
 			game.player.checkForBook();
-			game.Ai.checkForBook();
-			
-			System.out.println("Player Score: " + game.player.getScore());
-			System.out.println("AI Score: " + game.Ai.getScore());
-			System.out.println("");
-			System.out.println("");
+			game.ai.checkForBook();
+		System.out.println("Player Score: " + game.player.getScore());
+		System.out.println("AI Score: " + game.ai.getScore());
+		
+		//spacing
+		System.out.println("");
+		System.out.println("");
 						
 			System.out.println("Your Hand: ");
+			//displays user hand
 			game.player.displayHand();
 			System.out.println("");
-			
-			game.Ai.displayHand();
+		
 			System.out.println("");
+			
 			String rankAsked = null;
 			Card tempC = null;
 			Rank temp = null;
+			
+			//variable to loop going
 			int k = 0;
-			System.out.println("It's your turn ");
-			System.out.println("");
-			System.out.println("What rank of a card would you like to ask for?");
-			System.out.println("");
-			while(k != 1){
-			 rankAsked = game.reader.next(); // Scans the next token of the input as a Char.
+//print outs that tell user what is going on
+System.out.println("It's your turn ");
+System.out.println("");
+System.out.println("What rank of a card would you like to ask for?");
+System.out.println("");
+			while (k != 1) {
+rankAsked = game.reader.next(); // Scans the next token of the input as a Char.
 			 try {
-		           Rank.valueOf(rankAsked.toUpperCase()); // but this validates with all the enum values
+				// but this validates with all the enum values
+				 Rank.valueOf(rankAsked.toUpperCase()); 
 		           temp = Rank.valueOf(rankAsked.toUpperCase());
 		           k = 1;
 		        } catch (IllegalArgumentException e) {
-		           System.out.println("invalid option, please try another. ");
+	 System.out.println("invalid option, please try another. ");
 		        } 
 			}
 			
 			
 			
-			 tempC = game.Ai.askCard(temp);
+			 tempC = game.ai.askCard(temp);
 			 
-			
-			 if(tempC != null){
-				 game.player.hand.add(tempC);
+			//checks to see if tempC was set to anything
+			 if (tempC != null) {
+				 game.player.getHand().add(tempC);
 				 game.playerTurn = false;
-			 }
-			 else{
-				 System.out.println("Ai did not have the card you were looking for ");
-				 System.out.println("Go Fish! ");
-				 System.out.println(""); 
-				 if(game.player.goFish(temp) == true){
+				 
+			 } else {
+	System.out.println("Ai did not have the card you were looking for ");
+	System.out.println("Go Fish! ");
+	System.out.println(""); 
+				 if (game.player.goFish(temp) == true) {
+         System.out.println("You got the card you asked for from the deck");
+		 System.out.println("So you get to take your turn again.");
 				 
 				game.playerTurn = true;
-			 }
-			 else{
+			 
+				 } else {
 				 game.playerTurn = false;
 			 }
 			 
 			 }
-			 if(game.playerTurn != true){
-			 temp = game.Ai.AiTurn();
+			 if (game.playerTurn == false) {
+			 temp = game.ai.aiTurn();
 			 tempC = game.player.askCard(temp);
-			 if(tempC != null){
-				 game.Ai.hand.add(tempC);
-			 }
-			 else{
-				 game.Ai.goFish(temp);
-			 }
+			 if (tempC != null) {
+				 game.ai.getHand().add(tempC);
 			 
+			 } else {
+				 game.ai.goFish(temp);
 			 }
 			 
-			 
-			 N++;
+			 }
 		}
 		
 		
