@@ -24,7 +24,7 @@ public class PlayerTest {
 
 
     /**
-     *test the checkForBook method true case
+     *test the checkForBook method true case.
      */
     @Test
     public void testCheckForBook() {
@@ -41,7 +41,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the checkForBook method false case
+     *test the checkForBook method false case.
      */
     @Test
     public void testCheckForBook2() {
@@ -57,7 +57,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the checkForBook method true case
+     *test the checkForBook method true case.
      */
     @Test
     public void testCheckForBook3() {
@@ -78,7 +78,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the checkForBook method false case
+     *test the checkForBook method false case.
      */
     @Test
     public void testCheckForBook4() {
@@ -97,7 +97,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the goFish method true case
+     *test the goFish method true case.
      */
     @Test
     public void testGoFish() {
@@ -112,7 +112,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the goFish method false case
+     *test the goFish method false case.
      */
     @Test
     public void testGoFish2() {
@@ -127,7 +127,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the AskCard method true case
+     *test the AskCard method true case.
      */
     @Test
     public void testAskCard() {
@@ -166,7 +166,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the askCard method false case
+     *test the askCard method false case.
      */
     @Test
     public void testAskCard2() {
@@ -190,7 +190,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the askCard method false case
+     *test the askCard method false case.
      */
     @Test
     public void testAskCard3() {
@@ -215,7 +215,7 @@ public class PlayerTest {
     }
 
     /**
-     *test the hasRankInHand method true
+     *test the hasRankInHand method true.
      */
     @Test
     public void testHasRankInHand() {
@@ -234,7 +234,7 @@ public class PlayerTest {
     }
 
     /**
-     * test the hasRankInHand method false
+     * test the hasRankInHand method false.
      */
     @Test
     public void testHasRankInHand2() {
