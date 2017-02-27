@@ -1,4 +1,4 @@
-
+package go.Fish.exe;
 /**
  * class for the cards of a deck.
  * 
@@ -60,7 +60,7 @@ private Rank rank;
 
 	/**
 	 * toString method for displaying a card with rank and suit.
-	 * @see java.lang.Object#toString().
+	 * {@link java.lang.Object#toString()}
 	 * @return rankSTR
 	 */
 	public String toString() {
@@ -68,8 +68,4 @@ String suitSTR = this.suit.toString().toLowerCase();
 String rankSTR = this.rank.toString().toLowerCase();
 		return rankSTR + " of " + suitSTR;
 	}
-	
-	
-	
-	
 }

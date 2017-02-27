@@ -1,3 +1,4 @@
+package go.Fish.exe;
 import java.util.ArrayList;
 import java.util.Random;
 

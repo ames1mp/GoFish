@@ -1,8 +1,9 @@
+package go.Fish.exe;
 
 import java.util.Scanner;
 
 /**
- *
+ * The class where the game is put together and run. 
  * @author Lanndon Rose
  * @author Michael Ames
  */
@@ -50,6 +51,7 @@ return bookSize;
 	 * @param args basic for main method
 	 */
 	public static void main(final String[] args) {
+		// create a new game
 		Game game = new Game();
 		
 		System.out.println("Welcome to Gofish");
