@@ -54,6 +54,7 @@ public class PlayerTest {
         player.setHand(hand);
 
         assertEquals(player.checkForBook(), false);
+
     }
 
     /**
