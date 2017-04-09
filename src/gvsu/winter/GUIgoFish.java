@@ -16,10 +16,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.border.EtchedBorder;
 
 public class GUIgoFish {
 
 	private JFrame frame;
+	
+	private JPanel panel = new JPanel();
 
 
 	/**
@@ -57,10 +64,12 @@ public class GUIgoFish {
 		frame.setBounds(100, 100, 900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 900, 600);
+		
+		panel.setBounds(0, 0, 884, 540);
 		frame.getContentPane().add(panel);
-		panel.setLayout(null);
+				panel.setLayout(null);
+		
+			
 		
 		
 
@@ -84,37 +93,32 @@ public class GUIgoFish {
 		btnGoFish.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				ImageIcon imageIcon = new ImageIcon
-						(new ImageIcon("res/queen_of_hearts2.png").getImage()
-								.getScaledInstance(100,140,
-						        Image.SCALE_SMOOTH));
+				 System.out.println("Your Hand: ");
+	            // displays user hand
+	            Game.getPlayer().displayHand();
+	            System.out.println("\n\n");
 				
-				JButton BtButton = new JButton(imageIcon);
-				BtButton.setBounds(40, 60, 113, 149);
-				panel.add(BtButton);
-				panel.repaint();
 			}
 		});
 		btnGoFish.setBounds(800, 450, 89, 23);
 
 		JButton btnStart = new JButton("Start");
+		btnStart.setBounds(350, 290, 113, 49);
+		panel.add(btnStart);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				frame.getContentPane().remove(btnStart);
+				panel.remove(btnStart);
 				frame.repaint();
 
-
+				btnGoFish.setBounds(350, 450, 89, 23);
 
 				panel.add(btnGoFish);
 				Game.newGame();
+				showCards();
+				panel.repaint();
 			}
 		});
-
-
-		btnStart.setBounds(165, 124, 89, 23);
-		frame.getContentPane().add(btnStart);
-
 
 
 		
@@ -123,6 +127,17 @@ public class GUIgoFish {
 	}
 
 	public void showCards () {
-		Game.getPlayer().getHand();
+		int X = 40;
+	for(int i=0; i < Game.getPlayer().getHand().size(); i++){
+		ImageIcon Card = new ImageIcon(new ImageIcon
+				("res/" + Game.getPlayer().getHand().get(i).getFilename()).getImage()
+				.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+		
+		JButton BtButton = new JButton(Card);
+		BtButton.setBounds(X, 60, 113, 149);
+		panel.add(BtButton);
+		
+		X= (X + 120);
+	}
 	}
 }
