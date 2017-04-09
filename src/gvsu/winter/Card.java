@@ -1,5 +1,13 @@
 package gvsu.winter;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 /**
  * class for the cards of a deck.
  *
@@ -20,6 +28,10 @@ public class Card {
 
     private String fileName;
 
+    private Image img;
+
+    private final int SMALL_SIZE = 100;
+
 
 
     /**
@@ -33,7 +45,7 @@ public class Card {
     public Card(final Suit temp1, final Rank temp2) {
         this.rank = temp2;
         this.suit = temp1;
-        this.fileName = genFileName();
+        img = createImage();
     }
 
     public String getFilename() {
@@ -42,8 +54,8 @@ public class Card {
 
     private String genFileName(){
     	String fileName;
-
-    	fileName = getRank().toString().toUpperCase();
+    	fileName = "res/";
+    	fileName += getRank().toString().toUpperCase();
     	fileName +="_of_";
     	fileName += getSuit().toString().toLowerCase();
     	fileName +=".png";
@@ -87,6 +99,31 @@ public class Card {
      */
     public void setSuit(final Suit temp) {
         this.suit = temp;
+    }
+
+    public Image getImage() {
+    	return img;
+    }
+
+    private Image createImage() {
+    	BufferedImage img = null;
+    	try {
+    	    img = ImageIO.read(new File(genFileName()));
+    	} catch (IOException e) {
+    	}
+
+    	BufferedImage newImage = new BufferedImage(100, 140,
+    			BufferedImage.TYPE_INT_RGB);
+
+    	Graphics g = newImage.createGraphics();
+    	g.drawImage(img, 0, 0, SMALL_SIZE, SMALL_SIZE, null);
+    	g.dispose();
+
+    	Image img3 = newImage;
+
+    	img3.getScaledInstance(100, 140, Image.SCALE_SMOOTH);
+
+    	return img3;
     }
 
     /**
