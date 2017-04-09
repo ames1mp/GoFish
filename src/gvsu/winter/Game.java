@@ -54,7 +54,7 @@ public class Game {
      *
      * @return The rank the user entered
      **************************************************************************/
-    private Rank scanRank() {
+    public Rank scanRank() {
         boolean running = true;
         String rankAsked = null;
         Rank temp = null;
