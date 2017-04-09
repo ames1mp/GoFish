@@ -1,4 +1,5 @@
 package gvsu.winter;
+
 import java.util.ArrayList;
 import java.util.Random;
 

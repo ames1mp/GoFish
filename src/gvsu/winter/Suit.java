@@ -8,6 +8,12 @@ package gvsu.winter;
 public enum Suit {
 	/**
 	 * enums for the suit of a card. 
+	 * {@link gvsu.winter.Suit#clubs}
+	 * {@link gvsu.winter.Suit#diamonds}
+ 	 * {@link gvsu.winter.Suit#hearts}
+ 	 * {@link gvsu.winter.Suit#spades}
+	 * 
 	 */
-	CLUBS, DIAMONDS, HEARTS, SPADES
+	clubs, diamonds, hearts, spades
 }
+// IF YOU ARE SEEING THIS THEN IT WENT THROUGH!!!!

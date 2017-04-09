@@ -72,7 +72,7 @@ public class Card {
     /**
      * toString method for displaying a card with rank and suit.
      *
-     * @see java.lang.Object#toString().
+     * {@link java.lang.Object#toString()}
      * @return rankSTR
      */
     @Override
@@ -83,3 +83,4 @@ public class Card {
     }
 
 }
+
