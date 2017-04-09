@@ -18,6 +18,10 @@ public class Card {
      */
     private Rank rank;
 
+    private String fileName;
+
+
+
     /**
      * Card constructor.
      *
@@ -29,7 +33,23 @@ public class Card {
     public Card(final Suit temp1, final Rank temp2) {
         this.rank = temp2;
         this.suit = temp1;
+        this.fileName = genFileName();
     }
+
+    public String getFilename() {
+    	return fileName;
+    }
+
+    private String genFileName(){
+    	String fileName;
+
+    	fileName = getRank().toString().toUpperCase();
+    	fileName +="_of_";
+    	fileName += getSuit().toString().toLowerCase();
+    	fileName +=".png";
+    	return fileName;
+
+	}
 
     /**
      * getter method to retrieve the rank of a card.

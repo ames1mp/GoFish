@@ -27,8 +27,6 @@ public class GameTest {
 		 assertEquals(Rank.TWO, game.scanRank());
 
 
-
-
 	}
 /*
 	@Test
