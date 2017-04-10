@@ -45,7 +45,7 @@ public class Card {
     public Card(final Suit temp1, final Rank temp2) {
         this.rank = temp2;
         this.suit = temp1;
-        img = createImage();
+        fileName = genFileName();
     }
 
     public String getFilename() {

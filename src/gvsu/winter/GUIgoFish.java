@@ -1,6 +1,5 @@
 package gvsu.winter;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -19,6 +18,8 @@ import javax.swing.JPanel;
 public class GUIgoFish {
 
 	private JFrame frame;
+
+	private JPanel panel = new JPanel();
 
 
 	/**
@@ -52,15 +53,70 @@ public class GUIgoFish {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		Game game = new Game();
+
 		frame = new JFrame();
-		frame.setBounds(100, 100, 900, 600);
+		frame.setBounds(0, 0, 2000, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 900, 600);
+
+		panel.setBounds(0, 0, 2000, 1000);
+		panel.setBackground(Color.darkGray);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		panel.setBackground(Color.GREEN);
+
+
+
+		JLabel logo = new JLabel();
+		ImageIcon logoIcon = new ImageIcon(new ImageIcon
+				("res/logo.png").getImage()
+				.getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+		logo.setIcon(logoIcon);
+		logo.setBounds(650, 250, 582, 282);
+		panel.add(logo);
+
+		JLabel opponent = new JLabel();
+		ImageIcon opponentIcon = new ImageIcon(new ImageIcon
+				("res/opponent.jpg").getImage()
+				.getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+		opponent.setIcon(opponentIcon);
+		opponent.setBounds(1250, 0, 582, 282);
+
+		JLabel player = new JLabel();
+		ImageIcon playerIcon = new ImageIcon(new ImageIcon
+				("res/player.jpg").getImage()
+				.getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+		player.setIcon(playerIcon);
+		player.setBounds(1250, 670, 582, 282);
+
+		JLabel star = new JLabel();
+		ImageIcon starIcon = new ImageIcon(new ImageIcon
+				("res/star.png").getImage()
+				.getScaledInstance(90, 90, Image.SCALE_SMOOTH));
+		star.setIcon(starIcon);
+		star.setBounds(100, 855, 100, 100);
+
+		JLabel youSay = new JLabel();
+		youSay.setText("You say:");
+		youSay.setBounds(1250, 600, 100, 50);
+		youSay.setOpaque(false);
+
+
+		JLabel theySay = new JLabel();
+		theySay.setText("Opponent says:");
+		theySay.setBounds(1250, 300, 100, 50);
+		theySay.setOpaque(false);
+
+		JLabel score = new JLabel();
+		score.setText("SCORE:");
+		score.setBounds(0, 0, 50, 50);
+		score.setOpaque(false);
+
+		JLabel score2 = new JLabel();
+		score2.setText("SCORE:");
+		score2.setBounds(0, panel.getHeight()-50, 50, 50);
+		score2.setOpaque(false);
+
 
 
 
@@ -81,65 +137,112 @@ public class GUIgoFish {
 		mnFile.add(mntmSaveGame);
 		frame.getContentPane().setLayout(null);
 
-		JLabel score = new JLabel();
-		score.setText("AI Points: ");
-		score.setBounds(0, 0, 200, 200);
-		score.setVisible(true);
-
 		JButton btnGoFish = new JButton("Go Fish");
 		btnGoFish.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				ImageIcon imageIcon = new ImageIcon
-						(new ImageIcon("res/queen_of_hearts2.png").getImage()
-								.getScaledInstance(100,140,
-						        Image.SCALE_SMOOTH));
+				 System.out.println("Your Hand: ");
+	            // displays user hand
+	            Game.getPlayer().displayHand();
+	            System.out.println("\n\n");
 
-				JButton BtButton = new JButton(imageIcon);
-
-				frame.getContentPane().remove(btnGoFish);
-
-				BtButton.setBounds(50, 75, 113, 149);
-				panel.add(BtButton);
-				panel.add(score);
-				panel.repaint();
 			}
 		});
-		btnGoFish.setBounds(800, 450, 89, 23);
+		btnGoFish.setBounds(850, 900, 89, 23);
 
 		JButton btnStart = new JButton("Start");
+		btnStart.setBounds(850, 700, 113, 49);
+		panel.add(btnStart);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				JPanel panel2 = new JPanel();
-				panel.setBounds(0, 0, 900, 600);
-				frame.getContentPane().add(panel2);
-				panel.setLayout(new BorderLayout());
-				panel.setBackground(Color.MAGENTA);
-
-
-				frame.getContentPane().remove(btnStart);
+				panel.remove(btnStart);
+				panel.remove(logo);
 				frame.repaint();
 
+				btnGoFish.setBounds(1100, 500, 89, 23);
 
-
-				panel.add(btnGoFish);
+				//panel.add(btnGoFish);
+				panel.add(opponent);
+				panel.add(player);
+				panel.add(youSay);
+				panel.add(score);
+				panel.add(score2);
+				panel.add(theySay);
+				panel.add(star);
 				Game.newGame();
+				showCards();
+				showAICards();
+				showDeck();
+				panel.repaint();
 			}
 		});
-
-
-		btnStart.setBounds(165, 124, 89, 23);
-		frame.getContentPane().add(btnStart);
-
-
-
-
-
 
 	}
 
 	public void showCards () {
-		Game.getPlayer().getHand();
+		int X = 40;
+		int Y = 700;
+	for(int i=0; i < Game.getPlayer().getHand().size(); i++){
+		ImageIcon Card = new ImageIcon(new ImageIcon
+				(Game.getPlayer().getHand().get(i).getFilename()).getImage()
+				.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+
+		JButton BtButton = new JButton(Card);
+		BtButton.setBounds(X, Y, 113, 149);
+		panel.add(BtButton);
+
+		X= (X + 120);
+	}
+	}
+
+	public void showAICards () {
+		int X = 40;
+		int Y = 75;
+	for(int i=0; i < Game.getPlayer().getHand().size(); i++){
+		ImageIcon Card = new ImageIcon(new ImageIcon
+				("res/cardBack.png").getImage()
+				.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+
+		JLabel cardBack = new JLabel(Card);
+		cardBack.setBounds(X, Y, 113, 149);
+		panel.add(cardBack);
+
+		X= (X + 120);
+	}
+	}
+
+	public void showDeck() {
+		int X = 40;
+		int Y = 400;
+		for (int i = 0; i < 38; i++) {
+
+			ImageIcon Card = new ImageIcon(
+					new ImageIcon("res/cardBack.png").getImage()
+							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+
+			JLabel cardBack = new JLabel(Card);
+			cardBack.setBounds(X, Y, 113, 149);
+			panel.add(cardBack);
+
+			X = (X + 40);
+		}
+	}
+
+	public void showScore() {
+		int X = 40;
+		int Y = 400;
+		for (int i = 0; i < 38; i++) {
+
+			ImageIcon Card = new ImageIcon(
+					new ImageIcon("res/cardBack.png").getImage()
+							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+
+			JLabel cardBack = new JLabel(Card);
+			cardBack.setBounds(X, Y, 113, 149);
+			panel.add(cardBack);
+
+			X = (X + 40);
+		}
 	}
 }
