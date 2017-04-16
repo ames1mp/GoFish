@@ -1,5 +1,6 @@
 package gvsu.winter;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -54,6 +55,7 @@ public class GUIgoFish {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		Game game = new Game();
 
 		frame = new JFrame();
@@ -81,8 +83,12 @@ public class GUIgoFish {
 				("res/logo.png").getImage()
 				.getScaledInstance(582, 282, Image.SCALE_SMOOTH));
 		logo.setIcon(logoIcon);
+<<<<<<< HEAD
 		logo.setBounds(center(logoIcon));
 
+=======
+		logo.setBounds(300, 200, 582, 282);
+>>>>>>> branch 'master' of https://github.com/ames1mp/GoFish.git
 		panel.add(logo);
 
 		JLabel opponent = new JLabel();
@@ -158,10 +164,14 @@ public class GUIgoFish {
 
 			}
 		});
-		btnGoFish.setBounds(850, 900, 89, 23);
+		btnGoFish.setBounds(300, 400, 89, 23);
 
 		JButton btnStart = new JButton("Start");
+<<<<<<< HEAD
 		btnStart.setBounds((panel.getWidth()/2)-(89/2),(panel.getHeight()/2)+logoIcon.getIconHeight()/2 + 11, 89,23);
+=======
+		btnStart.setBounds(550, 500, 113, 49);
+>>>>>>> branch 'master' of https://github.com/ames1mp/GoFish.git
 		panel.add(btnStart);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
@@ -170,9 +180,9 @@ public class GUIgoFish {
 				panel.remove(logo);
 				frame.repaint();
 
-				btnGoFish.setBounds(1100, 500, 89, 23);
+				btnGoFish.setBounds(400, 350, 89, 23);
 
-				//panel.add(btnGoFish);
+				panel.add(btnGoFish);
 				panel.add(opponent);
 				panel.add(player);
 				panel.add(youSay);
@@ -213,12 +223,14 @@ public class GUIgoFish {
 
 	public void showCards () {
 		int X = 40;
-		int Y = 700;
+		int Y = 400;
 	for(int i=0; i < Game.getPlayer().getHand().size(); i++){
-		ImageIcon Card = new ImageIcon(new ImageIcon
-				(Game.getPlayer().getHand().get(i).getFilename()).getImage()
-				.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+		ImageIcon Card = new ImageIcon(new ImageIcon(
+	Game.getPlayer().getHand().get(i).getFilename()).getImage()
+	.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+	Card.setDescription(Game.getPlayer().getHand().get(i).toString());
 
+<<<<<<< HEAD
 		JButton BtButton = new JButton(Card);
 		BtButton.setBounds(X, Y, 113, 149);
 		BtButton.addActionListener(new ActionListener() {
@@ -232,14 +244,25 @@ public class GUIgoFish {
 			}
 		});
 		panel.add(BtButton);
+=======
+		JButton btButton = new JButton(Card);
+		btButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				Game.getAi().askCard(Card.getDescription());
+			}
+		});
+		btButton.setBounds(X, Y, 113, 149);
+		panel.add(btButton);
+>>>>>>> branch 'master' of https://github.com/ames1mp/GoFish.git
 
-		X= (X + 120);
+		X = (X + 120);
 	}
 	}
 
 	public void showAICards () {
 		int X = 40;
-		int Y = 75;
+		int Y = 50;
 	for(int i=0; i < Game.getPlayer().getHand().size(); i++){
 		ImageIcon Card = new ImageIcon(new ImageIcon
 				("res/cardBack.png").getImage()
@@ -255,18 +278,18 @@ public class GUIgoFish {
 
 	public void showDeck() {
 		int X = 40;
-		int Y = 400;
+		int Y = 200;
 		for (int i = 0; i < 38; i++) {
 
 			ImageIcon Card = new ImageIcon(
 					new ImageIcon("res/cardBack.png").getImage()
-							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+							.getScaledInstance(50, 70, Image.SCALE_SMOOTH));
 
 			JLabel cardBack = new JLabel(Card);
 			cardBack.setBounds(X, Y, 113, 149);
 			panel.add(cardBack);
 
-			X = (X + 40);
+			X = (X + 20);
 		}
 	}
 
@@ -286,4 +309,5 @@ public class GUIgoFish {
 			X = (X + 40);
 		}
 	}
+	//if this is here the push worked
 }

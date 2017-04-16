@@ -37,7 +37,7 @@ public class Game {
     /**
      * instantiates a new AI player.
      */
-    private AiPlayer ai = new AiPlayer(deck, this);
+    private static AiPlayer ai = new AiPlayer(deck, game1);
 
     /**
      * scanner for taking in user input.
@@ -240,7 +240,7 @@ public class Game {
     /**
      * @return ai the AI player
      */
-    public AiPlayer getAi() {
+    public static AiPlayer getAi() {
         return ai;
     }
     
