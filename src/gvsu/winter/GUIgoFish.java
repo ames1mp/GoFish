@@ -3,6 +3,7 @@ package gvsu.winter;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -56,11 +57,19 @@ public class GUIgoFish {
 		Game game = new Game();
 
 		frame = new JFrame();
-		frame.setBounds(0, 0, 2000, 1000);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setUndecorated(false);
+		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		/*Dimension size = frame.getBounds().getSize();
+		Rectangle dimension = new Rectangle();
+		dimension.setBounds(0, 0, (int)size.getWidth(), (int)size.getHeight());
+		frame..
+		frame.setBounds(dimension);*/
 
-		panel.setBounds(0, 0, 2000, 1000);
+
+		panel.setBounds(frame.getBounds());
 		panel.setBackground(Color.darkGray);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
@@ -72,7 +81,8 @@ public class GUIgoFish {
 				("res/logo.png").getImage()
 				.getScaledInstance(582, 282, Image.SCALE_SMOOTH));
 		logo.setIcon(logoIcon);
-		logo.setBounds(650, 250, 582, 282);
+		logo.setBounds(center(logoIcon));
+
 		panel.add(logo);
 
 		JLabel opponent = new JLabel();
@@ -151,7 +161,7 @@ public class GUIgoFish {
 		btnGoFish.setBounds(850, 900, 89, 23);
 
 		JButton btnStart = new JButton("Start");
-		btnStart.setBounds(850, 700, 113, 49);
+		btnStart.setBounds((panel.getWidth()/2)-(89/2),(panel.getHeight()/2)+logoIcon.getIconHeight()/2 + 11, 89,23);
 		panel.add(btnStart);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
@@ -180,6 +190,27 @@ public class GUIgoFish {
 
 	}
 
+
+	public Rectangle center(ImageIcon img) {
+		int width = img.getIconWidth();
+		int height = img.getIconHeight();
+
+		int x = panel.getWidth()/2 - width/2;
+		int y = panel.getHeight()/2 - height/2;
+
+		Rectangle r = new Rectangle(x, y, width, height);
+		return r;
+	}
+
+	public Rectangle center(int width, int height) {
+
+		int x = panel.getWidth()/2 - width/2;
+		int y = panel.getHeight()/2 + height/2;
+
+		Rectangle r = new Rectangle(x, y, width, height);
+		return r;
+	}
+
 	public void showCards () {
 		int X = 40;
 		int Y = 700;
@@ -190,6 +221,16 @@ public class GUIgoFish {
 
 		JButton BtButton = new JButton(Card);
 		BtButton.setBounds(X, Y, 113, 149);
+		BtButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				 System.out.println("Your Hand: ");
+	            // displays user hand
+	            Game.getPlayer().displayHand();
+	            System.out.println("\n\n");
+
+			}
+		});
 		panel.add(BtButton);
 
 		X= (X + 120);
