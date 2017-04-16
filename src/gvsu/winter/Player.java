@@ -214,7 +214,11 @@ public class Player {
      * @param tempC the ranked the player is asking for.
      * @return card the card the player has or does not have.
      *************************************************************************/
-    public ArrayList<Card> askCard(final Rank tempC) {
+    public ArrayList<Card> askCard(final String StringC) {
+    	
+    	String[] trash = StringC.split(" ");
+    	
+    	Rank tempC =  Rank.valueOf(trash[0].toUpperCase());
 
         ArrayList<Card> cards = new ArrayList<Card>();
 
