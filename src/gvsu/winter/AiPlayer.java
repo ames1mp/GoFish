@@ -72,7 +72,7 @@ public class AiPlayer extends Player {
             tempR = getHand().get(randomNum).getRank();
         }
         // Prints out the card the AI wants to ask for
-        System.out.println("Do you have any: " + tempR);
+       // System.out.println("Do you have any: " + tempR);
         lastChoice = tempR;
         return tempR;
     }

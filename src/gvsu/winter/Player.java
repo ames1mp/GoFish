@@ -97,7 +97,14 @@ public class Player {
      * @param pHand hand to set the player's hand to
      */
     public void setHand(final ArrayList<Card> pHand) {
-        this.hand = pHand;
+    	if(this.hand.size() == 0) {
+    		this.hand = pHand;
+    	} else {
+    		for ( Card c: pHand) {
+    			this.hand.add(c);
+    		}
+    	}
+
     }
 
     /***************************************************************************
@@ -211,14 +218,14 @@ public class Player {
      * method for checking the opponents hand to see if they had the card asked
      * for.
      *
-     * @param tempC the ranked the player is asking for.
+     * @param tempC the rank the player is asking for.
      * @return card the card the player has or does not have.
      *************************************************************************/
-    public ArrayList<Card> askCard(final String StringC) {
-    	
-    	String[] trash = StringC.split(" ");
-    	
-    	Rank tempC =  Rank.valueOf(trash[0].toUpperCase());
+    public ArrayList<Card> askCard(Rank tempC) {
+
+    	//String[] trash = StringC.split(" ");
+
+    	//Rank tempC =  Rank.valueOf(trash[0].toUpperCase());
 
         ArrayList<Card> cards = new ArrayList<Card>();
 

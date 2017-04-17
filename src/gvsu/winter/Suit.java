@@ -14,6 +14,5 @@ public enum Suit {
  	 * {@link gvsu.winter.Suit#spades}
 	 *
 	 */
-	clubs, diamonds, hearts, spades
+	CLUBS, DIAMONDS, HEARTS, SPADES
 }
-// IF YOU ARE SEEING THIS THEN IT WENT THROUGH!!!!
