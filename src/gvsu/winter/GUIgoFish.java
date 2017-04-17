@@ -168,6 +168,9 @@ dimension.setBounds(0, 0, (int)size.getWidth(), (int)size.getHeight());
 	  frame, "You got the card you asked the AI for"
 	+ " so you get to play your turn again");
 			}
+		showCards();
+		panel.repaint();
+		playerTurn = false;
 				
 			}
 		});
