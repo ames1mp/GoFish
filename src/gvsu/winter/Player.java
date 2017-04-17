@@ -149,12 +149,17 @@ public class Player {
      * @param request
      *            The card the player requested from another player.
      **************************************************************************/
-    public boolean goFish(final Rank request) {
+    public boolean goFish(final String request) {
+    	
+    	String[] trash = request.split(" ");
+    	
+    	Rank tempR =  Rank.valueOf(trash[0].toUpperCase());
+    	
         card = deck.drawCard();
         hand.add(card);
         // checks to see if the card the player gets is the one they asked for.
         // if true, the player takes their turn again.
-        if (card.getRank() == request) {
+        if (card.getRank() == tempR) {
             return true;
         }
         return false;
@@ -211,29 +216,40 @@ public class Player {
      * method for checking the opponents hand to see if they had the card asked
      * for.
      *
-     * @param tempC the ranked the player is asking for.
-     * @return card the card the player has or does not have.
+     * @param stringC the ranked the player is asking for.
+     * @return true or false
      *************************************************************************/
-    public ArrayList<Card> askCard(final String StringC) {
+    public boolean  askCard(final String stringC) {
     	
-    	String[] trash = StringC.split(" ");
+    	String[] trash = stringC.split(" ");
     	
     	Rank tempC =  Rank.valueOf(trash[0].toUpperCase());
-
         ArrayList<Card> cards = new ArrayList<Card>();
 
         // loops through every card and checks it with the one asked
-        Iterator<Card> it = hand.iterator();
-        while (it.hasNext()) {
-            Card nextItem = it.next();
-            if (nextItem.getRank() == tempC) {
-                cards.add(nextItem);
-                it.remove();
-            }
+        for (int i = 0; i < Game.getAi().getHand().size(); i++) {
+        	
+        	
+            if (Game.getAi().getHand().get(i).getRank().equals(tempC)) {
+                cards.add(Game.getAi().getHand().get(i));
+                Game.getAi().getHand().remove(Game.getAi().getHand().get(i));
+                
+          
         }
-
-        return cards;
-    }
+        }
+        System.out.println(" ");
+        
+        if (cards.size() > 0) {
+          for (Card c : cards) {
+              Game.getPlayer().setHand(c);
+          }
+        } else { 
+        	return false;
+        }
+		return true;
+        
+        }
+    
 
     /**
      * method for displaying the players hand.

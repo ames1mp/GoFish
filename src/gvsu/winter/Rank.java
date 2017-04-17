@@ -8,7 +8,7 @@ package gvsu.winter;
  */
 public enum Rank {
 /**
- * Ranks of cards as Enums.
+ * Ranks of cards as Enum.
  * {@link gvsu.winter.Rank#ACE}
  * {@link gvsu.winter.Rank#TWO}
  * {@link gvsu.winter.Rank#THREE}
