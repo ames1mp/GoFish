@@ -42,9 +42,16 @@ public class Game {
 
 
 
+	/**
+	 * instantiates the gui.
+	 */
 	private GUIgoFish gui;
 
-	public Game(GUIgoFish gui) {
+	/**
+	 * method for setting the gui up with instances of game aspects.
+	 * @param gui gofish user interface variable
+	 */
+	public Game(final GUIgoFish gui) {
 		this.deck = new Deck();
 		this.player = new Player(this.deck, this);
 		this.ai = new AiPlayer(this.deck, this);
@@ -62,6 +69,10 @@ public class Game {
 		// gameLoop();
 	}
 
+	/**
+	 * method for determining if it is the player turn or not.
+	 * @return true or false
+	 */
 	public boolean isPlayerTurn() {
 		return playerTurn;
 	}
@@ -75,36 +86,39 @@ public class Game {
 		return BOOKSIZE;
 	}
 
-	/**************************************************************************
+/**************************************************************************
 	 * Scans a rank from user text input.
 	 *
 	 * @return The rank the user entered
-	 **************************************************************************/
+**************************************************************************/
 	public Rank scanRank() {
 		boolean running = true;
 		String rankAsked = null;
 		Rank temp = null;
 		while (running) {
-			rankAsked = this.reader.next(); // Scans the next token of the
-											// input as a Char.
+rankAsked = this.reader.next(); // Scans the next token of the
+	// input as a Char.
 			try {
 				// but this validates with all the enum values
 				Rank.valueOf(rankAsked.toUpperCase());
 				temp = Rank.valueOf(rankAsked.toUpperCase());
 				running = false;
 			} catch (IllegalArgumentException e) {
-				System.out.println("invalid option, please try another. ");
+	System.out.println("invalid option, please try another. ");
 			}
 		}
 
 		return temp;
 	}
 
+	/**
+	 * Method for updating score and tell player they got a point.
+	 */
 	public void updateGame() {
 
 		if (player.checkForBook()) {
 			gui.yourMsg.setText("You scored a point!");
-			gui.yourScore.setText("Your Score:" + player.getScore());
+		gui.yourScore.setText("Your Score:" + player.getScore());
 		}
 
 		if (ai.checkForBook()) {
@@ -118,13 +132,13 @@ public class Game {
 
 	}
 
-	/**************************************************************************
+/**************************************************************************
 	 * The main method for playing GoFish.
 	 *
 	 * @param args
 	 *            args
 	 *
-	 *************************************************************************/
+ *************************************************************************/
 	// public static void main(final String[] args) {
 	// Game game = new Game();
 	//
@@ -278,7 +292,12 @@ public class Game {
 		return ai;
 	}
 
-	public void setPlayerTurn(boolean playerTurn) {
+	/**
+	 * sets boolean to true or false depending on whether it is the players
+	 * turn or not.
+	 * @param playerTurn boolean
+	 */
+	public void setPlayerTurn(final boolean playerTurn) {
 		this.playerTurn = playerTurn;
 	}
 

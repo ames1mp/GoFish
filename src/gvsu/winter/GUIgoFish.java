@@ -17,18 +17,41 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+/**
+ * @author Lanndon
+ *
+ */
 public class GUIgoFish {
 
+	/**
+	 * The container for the user interface.
+	 */
 	private JFrame frame;
-
+	/**
+	 * the panel for the game interface.
+	 */
 	private JPanel panel = new JPanel();
-
+	/**
+	 * the instance of the go fish game.
+	 */
 	private Game game;
-
+	/**
+	 * 
+	 */
 	private ImageStore store;
 
-	JLabel yourMsg, theirMsg, yourScore, theirScore, opponent, player, youSay,
+	/**
+	 * instantiation of labels for the game.
+	 */
+	private JLabel yourMsg, theirMsg,
+	yourScore, theirScore,
+	opponent, player, youSay,
 	theySay, score, score2;
+	
+	
+	/**
+	 * ImageIcon for back of cards.
+	 */
 	ImageIcon cardBack;
 
 
@@ -44,57 +67,44 @@ public class GUIgoFish {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-
 		game = new Game(this);
 		store = new ImageStore();
 		store.loadImages();
 		cardBack = new ImageIcon(
 				new ImageIcon("res/cardBack.png").getImage()
-				.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
-
+	.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setUndecorated(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		/*
-		 * Dimension size = frame.getBounds().getSize(); Rectangle dimension =
-		 * new Rectangle(); dimension.setBounds(0, 0, (int)size.getWidth(),
-		 * (int)size.getHeight()); frame.. frame.setBounds(dimension);
-		 */
-
 		panel.setBounds(frame.getBounds());
-		panel.setBackground(Color.darkGray);
+		panel.setBackground(Color.orange);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
 		JLabel logo = new JLabel();
 		ImageIcon logoIcon = new ImageIcon(new ImageIcon("res/logo.png")
-				.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
 		logo.setIcon(logoIcon);
-
 		logo.setBounds(center(logoIcon));
-
-		// logo.setBounds(300, 200, 582, 282);
-
 		panel.add(logo);
-
 		opponent = new JLabel();
-		ImageIcon opponentIcon = new ImageIcon(new ImageIcon("res/opponent.jpg")
-				.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+ImageIcon opponentIcon = new ImageIcon(new ImageIcon("res/opponent.jpg")
+	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
 		opponent.setIcon(opponentIcon);
 		opponent.setBounds(1250, 0, 582, 282);
 
 		player = new JLabel();
-		ImageIcon playerIcon = new ImageIcon(new ImageIcon("res/player.jpg")
-				.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
+ImageIcon playerIcon = new ImageIcon(new ImageIcon("res/player.jpg")
+	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
 		player.setIcon(playerIcon);
 		player.setBounds(1250, 670, 582, 282);
 
 		JLabel star = new JLabel();
-		ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
-				.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
+ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
+	.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
 		star.setIcon(starIcon);
 		star.setBounds(100, 855, 100, 100);
 
@@ -162,11 +172,6 @@ public class GUIgoFish {
 		btnGoFish.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				System.out.println("Your Hand: ");
-				// displays user hand
-				game.getPlayer().displayHand();
-				System.out.println("\n\n");
-
 			}
 		});
 		btnGoFish.setBounds(300, 400, 89, 23);
@@ -174,7 +179,7 @@ public class GUIgoFish {
 		JButton btnStart = new JButton("New Game");
 
 		btnStart.setBounds((panel.getWidth() / 2) - (89 / 2),
-				(panel.getHeight() / 2) + logoIcon.getIconHeight() / 2 + 11, 89,
+	(panel.getHeight() / 2) + logoIcon.getIconHeight() / 2 + 11, 89,
 				23);
 
 		// btnStart.setBounds(550, 500, 113, 49);
@@ -212,7 +217,11 @@ public class GUIgoFish {
 
 	}
 
-	public Rectangle center(ImageIcon img) {
+	/**
+	 * @param img
+	 * @return
+	 */
+	public Rectangle center(final ImageIcon img) {
 		int width = img.getIconWidth();
 		int height = img.getIconHeight();
 
@@ -223,7 +232,12 @@ public class GUIgoFish {
 		return r;
 	}
 
-	public Rectangle center(int width, int height) {
+	/**
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public Rectangle center(final int width, final int height) {
 
 		int x = panel.getWidth() / 2 - width / 2;
 		int y = panel.getHeight() / 2 + height / 2;
@@ -232,73 +246,70 @@ public class GUIgoFish {
 		return r;
 	}
 
+	/**
+	 * 
+	 */
 	public void showCards() {
 		int X = 40;
 		int Y = panel.getHeight() / 3 + 140;
 
 		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
-			/*
-			ImageIcon card = new ImageIcon(new ImageIcon(
-					game.getPlayer().getHand().get(i).getFilename()).getImage()
-							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
-			card.setDescription(game.getPlayer().getHand().get(i).toString());
-			*/
-			ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
+ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
 			JButton BtButton = new JButton(card);
 			BtButton.setBounds(X, Y, 113, 149);
 
 			BtButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 					//System.out.println("Your Hand: ");
 					// displays user hand
 					//game.getPlayer().displayHand();
 					//System.out.println("\n\n");
 
 					//PLAYER TURN LOGIC
-					if(game.isPlayerTurn()) {
-						 //Card request = game.getPlayer().getHand().get(i);
-						 ArrayList<Card> returnedCards = game.getAi().askCard(rank);
-						 if(returnedCards.size() > 0) {
-							 game.getPlayer().setHand(returnedCards);
+					if (game.isPlayerTurn()) {
+ //Card request = game.getPlayer().getHand().get(i);
+ ArrayList<Card> returnedCards = game.getAi().askCard(rank);
+						 if (returnedCards.size() > 0) {
+			 game.getPlayer().setHand(returnedCards);
 							 returnedCards.clear();
 							 game.updateGame();
 							 updateView();
-							 game.setPlayerTurn(false);
+		 game.setPlayerTurn(false);
 
 						 } else {
-							 theirMsg.setText("Go Fish!");
-							 if(game.getPlayer().goFish(rank)) {
-								 yourMsg.setText("You Got your Card! FREE TURN");
-								 game.updateGame();
+			 theirMsg.setText("Go Fish!");
+			 if (game.getPlayer().goFish(rank)) {
+			 yourMsg.setText("You Got your Card! FREE TURN");
+			 game.updateGame();
 								 updateView();
 							 } else {
-								 game.setPlayerTurn(false);
-								 game.updateGame();
+			 game.setPlayerTurn(false);
+			 game.updateGame();
 								 updateView();
 							 }
 						 }
 						 //AI TURN LOGIC
 					 } else {
-						 Rank request = game.getAi().aiTurn();
-						 ArrayList<Card> returnedCards = game.getPlayer().askCard(request);
-						 if(returnedCards.size() > 0) {
-							 game.getAi().setHand(returnedCards);
+	 Rank request = game.getAi().aiTurn();
+	 ArrayList<Card> returnedCards = game.getPlayer().askCard(request);
+						 if (returnedCards.size() > 0) {
+	 game.getAi().setHand(returnedCards);
 							 returnedCards.clear();
 							 game.updateGame();
 							 updateView();
-							 game.setPlayerTurn(true);
+	 game.setPlayerTurn(true);
 						 } else {
-							 yourMsg.setText("Go Fish!");
-							 if (game.getAi().goFish(request)) {
-								 theirMsg.setText("You Got your Card! FREE TURN");
-								 game.setPlayerTurn(true);
-								 game.updateGame();
+	 yourMsg.setText("Go Fish!");
+	 if (game.getAi().goFish(request)) {
+	theirMsg.setText("You Got your Card! FREE TURN");
+	game.setPlayerTurn(true);
+	game.updateGame();
 								 updateView();
 							 } else {
-								 game.setPlayerTurn(true);
-								 game.updateGame();
+     game.setPlayerTurn(true);
+     game.updateGame();
 								 updateView();
 							 }
 						 }
@@ -345,10 +356,7 @@ public class GUIgoFish {
 		int X = 40;
 		int Y = 200;
 		for (int i = 0; i < game.getDeck().getSize(); i++) {
-/*
-			ImageIcon Card = new ImageIcon(new ImageIcon("res/cardBack.png")
-					.getImage().getScaledInstance(50, 70, Image.SCALE_SMOOTH));
-*/
+
 			JLabel cardBackLabel = new JLabel(cardBack);
 			cardBackLabel.setBounds(X, Y, 113, 149);
 			panel.add(cardBackLabel);
@@ -357,14 +365,17 @@ public class GUIgoFish {
 		}
 	}
 
+	/**
+	 * puts the deck of cards on the screen.
+	 */
 	public void showScore() {
 		int X = 40;
 		int Y = 400;
 		for (int i = 0; i < 38; i++) {
 
 			ImageIcon Card = new ImageIcon(
-					new ImageIcon("res/cardBack.png").getImage()
-							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+			new ImageIcon("res/cardBack.png").getImage()
+			.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
 
 			JLabel cardBack = new JLabel(Card);
 			cardBack.setBounds(X, Y, 113, 149);
@@ -374,6 +385,9 @@ public class GUIgoFish {
 		}
 	}
 
+	/**
+	 * reloads all the items back to the panel.
+	 */
 	private void updateView() {
 		panel.removeAll();
 		showCards();
@@ -413,3 +427,4 @@ public class GUIgoFish {
 		});
 	}
 }
+ 
