@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,8 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+
 
 /**
  * @author Lanndon Rose
@@ -28,12 +32,17 @@ import javax.swing.Timer;
  * for the application.
  *
  */
-public class GUIgoFish {
+public class GUIgoFish implements Serializable {
 
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**  The container for the user interface. **/
-	private JFrame frame;
+	private static JFrame frame;
 
 	/** The panel for the game interface. **/
 	private JPanel panel = new JPanel();
@@ -74,7 +83,6 @@ public class GUIgoFish {
 		store = new ImageStore();
 		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
 		hOffset = store.getImages().get("cardBack").getIconHeight() / 4;
-		cardButtons = new HashMap<String, JButton>();
 		initialize();
 	}
 
@@ -185,9 +193,33 @@ public class GUIgoFish {
 
 		JMenuItem mntmOpenSave = new JMenuItem("Open Save");
 		mnFile.add(mntmOpenSave);
+		mntmOpenSave.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				Game.loadObject();
+				game = Game.getLoadGame();
+				panel.removeAll();
+				background.removeAll();
+				panel.add(background);
+				showCards();
+				showAICards();
+				
+			}
+
+		});
+		
 
 		JMenuItem mntmSaveGame = new JMenuItem("Save Game");
 		mnFile.add(mntmSaveGame);
+		mntmSaveGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				game.writeObject();
+				
+			}
+
+		});
+		
 		
 		JMenuItem mntmEXIT = new JMenuItem("Exit");
 		mntmEXIT.addActionListener(new ActionListener() {
@@ -273,7 +305,7 @@ public class GUIgoFish {
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
 			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
-			cardButton.setBounds(x, y+130, width, height);
+			cardButton.setBounds(x, y+135, width, height);
  
 			cardButton.addActionListener(new ActionListener() {
 				@Override
@@ -352,7 +384,7 @@ public class GUIgoFish {
 
 			JLabel cardBackLabel = new JLabel(
 					store.getImages().get("cardBack"));
-			cardBackLabel.setBounds(x, y-130, width, height);
+			cardBackLabel.setBounds(x, y-135, width, height);
 			background.add(cardBackLabel);
 
 			x += 50;
@@ -429,17 +461,6 @@ public class GUIgoFish {
 			updateView();
 		}  else {
 			panel.add(theySay);
-
-			//background.remove(youSay);
-			//background.remove(theySay);
-			//background.repaint();
-			//background.add(theySay);
-			//background.repaint();
-			///background.remove(youSay);
-			//background.remove(theySay);
-			//background.repaint();
-			//panel.repaint();
-			//updateView();
 			 theySay.setText(msg);
 				theySay.setHorizontalTextPosition(JLabel.CENTER);
 				theySay.setVerticalTextPosition(JLabel.CENTER);
@@ -538,7 +559,10 @@ public class GUIgoFish {
 		this.theirMsg = theirMsg;
 	}
 
-
+	public static void getERROR(){
+JOptionPane.showMessageDialog(frame, "Eggs are not supposed to be green.");
+		
+	}
 
 
 

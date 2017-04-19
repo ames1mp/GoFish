@@ -1,5 +1,6 @@
 package gvsu.winter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -10,9 +11,15 @@ import java.util.Iterator;
  * @author Michael Ames
  */
 
-public class Player {
+public class Player implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
      * variable for keeping the players score.
      */
     private int score;

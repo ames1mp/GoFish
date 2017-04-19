@@ -1,5 +1,6 @@
 package gvsu.winter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,7 +9,12 @@ import java.util.Random;
  * @author Lanndon Rose
  *
  */
-public class Deck {
+public class Deck implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Array list for the cards in the deck.

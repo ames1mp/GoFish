@@ -2,6 +2,7 @@ package gvsu.winter;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -12,8 +13,12 @@ import javax.swing.ImageIcon;
  * String keys. Keys for cards are produced by the card's toString method.
  *
  */
-public class ImageStore {
+public class ImageStore implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 *A hash map which holds game images as ImageIcons,
 	 *and accesses them with string keys.
