@@ -11,14 +11,6 @@ import org.junit.Test;
  * @author Lanndon Rose
  *
  */
-/**
- * @author Mike
- *
- */
-/**
- * @author Mike
- *
- */
 public class PlayerTest {
 
 

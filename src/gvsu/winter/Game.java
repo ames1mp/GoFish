@@ -117,13 +117,13 @@ rankAsked = this.reader.next(); // Scans the next token of the
 	public void updateGame() {
 
 		if (player.checkForBook()) {
-			gui.yourMsg.setText("You scored a point!");
-		gui.yourScore.setText("Your Score:" + player.getScore());
+			gui.getYourMsg().setText("You scored a point!");
+		gui.getYourScore().setText("Your Score:" + player.getScore());
 		}
 
 		if (ai.checkForBook()) {
-			gui.theirMsg.setText("You scored a point!");
-			gui.theirMsg.setText("Your Score:" + ai.getScore());
+			gui.getTheirMsg().setText("You scored a point!");
+			gui.getTheirMsg().setText("Your Score:" + ai.getScore());
 		}
 
 		gui.showCards();

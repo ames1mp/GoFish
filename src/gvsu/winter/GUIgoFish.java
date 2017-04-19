@@ -18,95 +18,90 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 /**
- * @author Lanndon
+ * @author Lanndon Rose
+ * @author Michael Ames
+ * @version Winter 2017
+ *
+ * Specifies the GUI layout, and contains the main driver method
+ * for the application.
  *
  */
 public class GUIgoFish {
 
-	/**
-	 * The container for the user interface.
-	 */
+	/**  The container for the user interface. **/
 	private JFrame frame;
-	/**
-	 * the panel for the game interface.
-	 */
+
+	/** The panel for the game interface. **/
 	private JPanel panel = new JPanel();
-	/**
-	 * the instance of the go fish game.
-	 */
+
+	/** Game instance. **/
 	private Game game;
-	/**
-	 * 
-	 */
+
+	/** ImageStore instance. **/
 	private ImageStore store;
 
-	/**
-	 * instantiation of labels for the game.
-	 */
-	private JLabel yourMsg, theirMsg,
-	yourScore, theirScore,
-	opponent, player, youSay,
-	theySay, score, score2;
-	
-	
-	/**
-	 * ImageIcon for back of cards.
-	 */
-	ImageIcon cardBack;
+	/** Declare JLabels.**/
+	private JLabel yourMsg, theirMsg, yourScore, theirScore,
+	opponent, player, youSay, theySay, logo, background;
 
+	/** Declare JButtons.**/
+	private JButton btnStart;
 
+	/** Standardized offsets used to position GUI elements.
+	 *  Offsets are calculated as 1/4 card width and height.
+	 *
+	 **/
+	 private int wOffset, hOffset;
 
 	/**
-	 * Create the application.
-	 */
+	 * Constructor. Instantiates objects and
+	 * calls the initialize method to define the GUI.
+	 **/
+
 	public GUIgoFish() {
+		game = new Game(this);
+		store = new ImageStore();
+		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
+		hOffset = store.getImages().get("cardBack").getIconHeight() / 4;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	/** Defines and creates the GUI. **/
 	private void initialize() {
-		game = new Game(this);
-		store = new ImageStore();
-		store.loadImages();
-		cardBack = new ImageIcon(
-				new ImageIcon("res/cardBack.png").getImage()
-	.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+
+
 		frame = new JFrame();
+
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setUndecorated(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+
 		panel.setBounds(frame.getBounds());
 		panel.setBackground(Color.orange);
-		frame.getContentPane().add(panel);
 		panel.setLayout(null);
+		frame.getContentPane().add(panel);
 
-		JLabel logo = new JLabel();
-		ImageIcon logoIcon = new ImageIcon(new ImageIcon("res/logo.png")
-	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
-		logo.setIcon(logoIcon);
-		logo.setBounds(center(logoIcon));
+		background = new JLabel();
+		store.loadBackground(frame.getBounds());
+		background.setIcon(store.getImages().get("background"));
+		background.setBounds(frame.getBounds());
+
+
+		logo = new JLabel();
+		logo.setIcon(store.getImages().get("logo"));
+		logo.setBounds(center(store.getImages().get("logo")));
 		panel.add(logo);
+
 		opponent = new JLabel();
-ImageIcon opponentIcon = new ImageIcon(new ImageIcon("res/opponent.jpg")
-	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
-		opponent.setIcon(opponentIcon);
+		opponent.setIcon(store.getImages().get("opponent"));
 		opponent.setBounds(1250, 0, 582, 282);
 
 		player = new JLabel();
-ImageIcon playerIcon = new ImageIcon(new ImageIcon("res/player.jpg")
-	.getImage().getScaledInstance(582, 282, Image.SCALE_SMOOTH));
-		player.setIcon(playerIcon);
+		player.setIcon(store.getImages().get("player"));
 		player.setBounds(1250, 670, 582, 282);
-
-		JLabel star = new JLabel();
-ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
-	.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
-		star.setIcon(starIcon);
-		star.setBounds(100, 855, 100, 100);
 
 		youSay = new JLabel();
 		youSay.setText("You say:");
@@ -118,39 +113,31 @@ ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
 		theySay.setBounds(1250, 300, 100, 50);
 		theySay.setOpaque(false);
 
-		yourMsg = new JLabel();
+		yourMsg = (new JLabel());
 		yourMsg.setBounds(1500, 600, 100, 50);
 		yourMsg.setBackground(Color.WHITE);
 		yourMsg.setText("text");
 		yourMsg.setOpaque(false);
 
-		theirMsg = new JLabel();
+		theirMsg = (new JLabel());
 		theirMsg.setBounds(1500, 300, 100, 50);
 		theirMsg.setBackground(Color.WHITE);
 		theirMsg.setText("text");
 		theirMsg.setOpaque(false);
 
-		yourScore = new JLabel();
-		yourScore.setBounds(100, 855, 100, 100);
-		yourScore.setBackground(Color.WHITE);
-		yourScore.setText("SCORE");
-		yourScore.setOpaque(true);
-
 		theirScore = new JLabel();
-		theirScore.setBounds(100, 100, 100, 100);
-		theirScore.setBackground(Color.WHITE);
-		theirScore.setText("SCORE");
-		theirScore.setOpaque(true);
+		theirScore.setText("SCORE:T");
+		theirScore.setBounds(wOffset, (int) (hOffset * 4.5)
+				- hOffset * 2, 50, 50);
+		theirScore.setOpaque(false);
+		//panel.add(theirScore);
 
-		score = new JLabel();
-		score.setText("SCORE:");
-		score.setBounds(0, 0, 50, 50);
-		score.setOpaque(false);
-
-		score2 = new JLabel();
-		score2.setText("SCORE:");
-		score2.setBounds(0, panel.getHeight() - 50, 50, 50);
-		score2.setOpaque(false);
+		yourScore = new JLabel();
+		yourScore.setText("SCORE:Y");
+		yourScore.setBounds(wOffset, (panel.getHeight())
+				- hOffset * 4, 50, 50);
+		yourScore.setOpaque(false);
+		//panel.add(yourScore);
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -174,52 +161,28 @@ ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
 			public void actionPerformed(final ActionEvent e) {
 			}
 		});
-		btnGoFish.setBounds(300, 400, 89, 23);
 
-		JButton btnStart = new JButton("New Game");
 
+		btnStart = new JButton("New Game");
 		btnStart.setBounds((panel.getWidth() / 2) - (89 / 2),
-	(panel.getHeight() / 2) + logoIcon.getIconHeight() / 2 + 11, 89,
-				23);
-
-		// btnStart.setBounds(550, 500, 113, 49);
-
-		panel.add(btnStart);
+				(panel.getHeight() / 2)
+				+ store.getImages().get("logo")
+				.getIconHeight() / 2 + 11, 100, 23);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				//Game game = new Game();
+				newGame();
 				panel.remove(btnStart);
 				panel.remove(logo);
-				frame.repaint();
-
-				btnGoFish.setBounds(400, 350, 89, 23);
-
-				panel.add(btnGoFish);
-				panel.add(opponent);
-				panel.add(player);
-				panel.add(youSay);
-				panel.add(score);
-				panel.add(score2);
-				panel.add(theySay);
-				//panel.add(star);
-				panel.add(yourMsg);
-				panel.add(theirMsg);
-				panel.add(yourScore);
-				panel.add(theirScore);
-				// Game.newGame();
-				showCards();
-				showAICards();
-				showDeck();
-				panel.repaint();
+				updateView();
 			}
 		});
-
+		panel.add(btnStart);
 	}
 
 	/**
-	 * @param img
-	 * @return
+	 * @param img - the image
+	 * @return A bounding rectangle.
 	 */
 	public Rectangle center(final ImageIcon img) {
 		int width = img.getIconWidth();
@@ -233,9 +196,9 @@ ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
 	}
 
 	/**
-	 * @param width
-	 * @param height
-	 * @return
+	 * @param width - the width of the image
+	 * @param height - the height of the image
+	 * @return A bounding rectangle.
 	 */
 	public Rectangle center(final int width, final int height) {
 
@@ -247,121 +210,121 @@ ImageIcon starIcon = new ImageIcon(new ImageIcon("res/star.png")
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void showCards() {
-		int X = 40;
-		int Y = panel.getHeight() / 3 + 140;
+		int x = wOffset;
+		int y = (panel.getHeight()) - (int) (hOffset * 8.5);
+		int width = store.getImages().get("cardBack").getIconWidth();
+		int height = store.getImages().get("cardBack").getIconHeight();
 
 		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
-ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
+			ImageIcon card = store.getImages().get(game.getPlayer()
+					.getHand().get(i).toString());
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
-			JButton BtButton = new JButton(card);
-			BtButton.setBounds(X, Y, 113, 149);
+			JButton cardButton = new JButton(card);
+			cardButton.setBounds(x, y, width, height);
 
-			BtButton.addActionListener(new ActionListener() {
-				@Override
-		public void actionPerformed(final ActionEvent e) {
-					//System.out.println("Your Hand: ");
-					// displays user hand
-					//game.getPlayer().displayHand();
-					//System.out.println("\n\n");
-
-					//PLAYER TURN LOGIC
-					if (game.isPlayerTurn()) {
- //Card request = game.getPlayer().getHand().get(i);
- ArrayList<Card> returnedCards = game.getAi().askCard(rank);
-						 if (returnedCards.size() > 0) {
-			 game.getPlayer().setHand(returnedCards);
-							 returnedCards.clear();
-							 game.updateGame();
-							 updateView();
-		 game.setPlayerTurn(false);
-
-						 } else {
-			 theirMsg.setText("Go Fish!");
-			 if (game.getPlayer().goFish(rank)) {
-			 yourMsg.setText("You Got your Card! FREE TURN");
-			 game.updateGame();
-								 updateView();
-							 } else {
-			 game.setPlayerTurn(false);
-			 game.updateGame();
-								 updateView();
-							 }
-						 }
-						 //AI TURN LOGIC
-					 } else {
-	 Rank request = game.getAi().aiTurn();
-	 ArrayList<Card> returnedCards = game.getPlayer().askCard(request);
-						 if (returnedCards.size() > 0) {
-	 game.getAi().setHand(returnedCards);
-							 returnedCards.clear();
-							 game.updateGame();
-							 updateView();
-	 game.setPlayerTurn(true);
-						 } else {
-	 yourMsg.setText("Go Fish!");
-	 if (game.getAi().goFish(request)) {
-	theirMsg.setText("You Got your Card! FREE TURN");
-	game.setPlayerTurn(true);
-	game.updateGame();
-								 updateView();
-							 } else {
-     game.setPlayerTurn(true);
-     game.updateGame();
-								 updateView();
-							 }
-						 }
-					 }
-
-				}
-			});
-			panel.add(BtButton);
-			/*
-			JButton btButton = new JButton(card);
-			btButton.addActionListener(new ActionListener() {
+			cardButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
-					game.getAi().askCard(card.getDescription());
+
+					// PLAYER TURN LOGIC
+					if (game.isPlayerTurn()) {
+						// Card request = game.getPlayer().getHand().get(i);
+						ArrayList<Card> returnedCards = game.getAi()
+								.askCard(rank);
+						if (returnedCards.size() > 0) {
+							game.getPlayer().setHand(returnedCards);
+							returnedCards.clear();
+							game.updateGame();
+							updateView();
+							game.setPlayerTurn(false);
+
+						} else {
+							getTheirMsg().setText("Go Fish!");
+							if (game.getPlayer().goFish(rank)) {
+								getYourMsg().setText(
+										"You Got your Card! FREE TURN");
+								game.updateGame();
+								updateView();
+							} else {
+								game.setPlayerTurn(false);
+								game.updateGame();
+								updateView();
+							}
+						}
+						// AI TURN LOGIC
+					} else {
+						Rank request = game.getAi().aiTurn();
+						ArrayList<Card> returnedCards = game.getPlayer()
+								.askCard(request);
+						if (returnedCards.size() > 0) {
+							game.getAi().setHand(returnedCards);
+							returnedCards.clear();
+							game.updateGame();
+							updateView();
+							game.setPlayerTurn(true);
+						} else {
+							getYourMsg().setText("Go Fish!");
+							if (game.getAi().goFish(request)) {
+								getTheirMsg().setText(
+										"You Got your Card! FREE TURN");
+								game.setPlayerTurn(true);
+								game.updateGame();
+								updateView();
+							} else {
+								game.setPlayerTurn(true);
+								game.updateGame();
+								updateView();
+							}
+						}
+					}
+
 				}
 			});
-			btButton.setBounds(X, Y, 113, 149);
-			panel.add(btButton);
-*/
-			X += 50;
+			background.add(cardButton);
+			/*
+			 * JButton btButton = new JButton(card);
+			 * btButton.addActionListener(new ActionListener() {
+			 *
+			 * @Override public void actionPerformed(final ActionEvent e) {
+			 * game.getAi().askCard(card.getDescription()); } });
+			 * btButton.setBounds(X, Y, 113, 149); panel.add(btButton);
+			 */
+			x += 50;
 
 		}
 	}
 
 	public void showAICards() {
-		int X = 40;
-		int Y = 50;
-		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
-			/*
-			ImageIcon Card = new ImageIcon(
-					new ImageIcon("res/cardBack.png").getImage()
-							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
-*/
-			JLabel cardBackLabel = new JLabel(store.cardBack);
-			cardBackLabel.setBounds(X, Y, 113, 149);
-			panel.add(cardBackLabel);
+		int x = wOffset;
+		int y = (int) (hOffset * 4.5);
+		int width = store.getImages().get("cardBack").getIconWidth();
+		int height = store.getImages().get("cardBack").getIconHeight();
 
-			X += 50;
+		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
+
+			JLabel cardBackLabel = new JLabel(
+					store.getImages().get("cardBack"));
+			cardBackLabel.setBounds(x, y, width, height);
+			background.add(cardBackLabel);
+
+			x += 50;
 		}
 	}
 
 	public void showDeck() {
 
 		int X = 40;
-		int Y = 200;
+		int Y = (panel.getHeight() / 2) - (3 * store.getImages().get("cardBack").getIconHeight() / 4);
 		for (int i = 0; i < game.getDeck().getSize(); i++) {
 
-			JLabel cardBackLabel = new JLabel(cardBack);
+			JLabel cardBackLabel = new JLabel(store.getImages().get("cardBack"));
 			cardBackLabel.setBounds(X, Y, 113, 149);
-			panel.add(cardBackLabel);
+			background.add(cardBackLabel);
 
-			X += 25 ;
+			X += 25;
 		}
 	}
 
@@ -374,8 +337,8 @@ ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
 		for (int i = 0; i < 38; i++) {
 
 			ImageIcon Card = new ImageIcon(
-			new ImageIcon("res/cardBack.png").getImage()
-			.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
+					new ImageIcon("res/cardBack.png").getImage()
+							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
 
 			JLabel cardBack = new JLabel(Card);
 			cardBack.setBounds(X, Y, 113, 149);
@@ -390,21 +353,23 @@ ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
 	 */
 	private void updateView() {
 		panel.removeAll();
+		panel.add(background);
 		showCards();
 		showDeck();
 		showAICards();
-		panel.add(opponent);
-		panel.add(player);
-		panel.add(youSay);
-		panel.add(score);
-		panel.add(score2);
-		panel.add(theySay);
-		//panel.add(star);
-		panel.add(yourMsg);
-		panel.add(theirMsg);
-		panel.add(yourScore);
-		panel.add(theirScore);
-		panel.repaint();
+		background.add(opponent);
+		background.add(player);
+		background.add(youSay);
+		background.add(theySay);
+		background.add(yourMsg);
+		background.add(theirMsg);
+		background.add(yourScore);
+		background.add(theirScore);
+		background.repaint();
+	}
+
+	private void newGame() {
+		game = new Game(this);
 	}
 
 	/**
@@ -426,5 +391,33 @@ ImageIcon card = store.images.get(game.getPlayer().getHand().get(i).toString());
 			}
 		});
 	}
+
+	public JLabel getYourMsg() {
+		return yourMsg;
+	}
+
+	public void setYourMsg(JLabel yourMsg) {
+		this.yourMsg = yourMsg;
+	}
+
+	public JLabel getYourScore() {
+		return yourScore;
+	}
+
+	public void setYourScore(JLabel yourScore) {
+		this.yourScore = yourScore;
+	}
+
+	public JLabel getTheirMsg() {
+		return theirMsg;
+	}
+
+	public void setTheirMsg(JLabel theirMsg) {
+		this.theirMsg = theirMsg;
+	}
+
+
+
+
+
 }
- 
