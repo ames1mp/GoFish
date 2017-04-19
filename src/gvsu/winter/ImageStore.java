@@ -23,7 +23,7 @@ public class ImageStore implements Serializable {
 	 *A hash map which holds game images as ImageIcons,
 	 *and accesses them with string keys.
 	 */
-	private HashMap<String, ImageIcon> images;
+	private transient HashMap<String, ImageIcon> images;
 
 	/**
 	 * Creates a new ImageStore object, which hold all of the
@@ -78,13 +78,13 @@ public class ImageStore implements Serializable {
 		ImageIcon pbub = new ImageIcon(
 				new ImageIcon("res/pbub.png").getImage()
 				.getScaledInstance(
-						300, 300, Image.SCALE_SMOOTH));
+						200, 200, Image.SCALE_SMOOTH));
 		images.put("pbub", pbub);
 
 		ImageIcon aibub = new ImageIcon(
 				new ImageIcon("res/aibub.png").getImage()
 				.getScaledInstance(
-						300, 300, Image.SCALE_SMOOTH));
+						200, 200, Image.SCALE_SMOOTH));
 		images.put("aibub", aibub);
 
 
@@ -103,11 +103,14 @@ public class ImageStore implements Serializable {
 		}
 	}
 
-	public void loadBackground(Rectangle r) {
+	/**
+	 * @param r
+	 */
+	public void loadBackground(final Rectangle r) {
 		ImageIcon background = new ImageIcon(
 				new ImageIcon("res/background2.jpg")
 				.getImage().getScaledInstance(
-						r.width, r.height, Image.SCALE_SMOOTH));
+		r.width, r.height, Image.SCALE_SMOOTH));
 		images.put("background", background);
 	}
 

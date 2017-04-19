@@ -118,12 +118,6 @@ public class GUIgoFish implements Serializable {
 		opponent.setIcon(store.getImages().get("opponent"));
 		opponent.setBounds(1250, 0, 582, 282);
 
-		/*
-		speech = new JLabel();
-		speech.setIcon(store.getImages().get("sp"));
-		speech.setBounds(center(store.getImages().get("sp")));
-		speech.setOpaque(false);
-	*/
 		player = new JLabel();
 		player.setIcon(store.getImages().get("player"));
 		player.setBounds(1250, 670, 582, 282);
@@ -137,15 +131,12 @@ public class GUIgoFish implements Serializable {
 		sayY -= hOffset * 1.5;
 		youSay.setIcon(store.getImages().get("pbub"));
 		youSay.setBounds(sayX, sayY, sayWidth, sayHeight);
-		youSay.setOpaque(false);
 		background.add(youSay);
 
 		theySay = new JLabel();
 		theySay.setIcon(store.getImages().get("aibub"));
 		sayY -= hOffset * 8.75;
-		theySay.setBounds(sayX, sayY, sayWidth, sayHeight);
-		theySay.setOpaque(false);
-		theySay.setVisible(false);
+		theySay.setBounds(sayX-25, sayY+95, sayWidth, sayHeight);
 		background.add(theySay);
 
 		yourMsg = (new JLabel());
@@ -203,6 +194,7 @@ public class GUIgoFish implements Serializable {
 				panel.add(background);
 				showCards();
 				showAICards();
+				background.repaint();
 				
 			}
 
@@ -476,6 +468,7 @@ public class GUIgoFish implements Serializable {
 	private void updateView() {
 		background.removeAll();
 		panel.add(background);
+		background.add(youSay);
 		showCards();
 		//background.add(printTxt("aasdfasdf", false));
 		showAICards();
@@ -488,6 +481,7 @@ public class GUIgoFish implements Serializable {
 		background.add(theirMsg);
 		background.add(yourScore);
 		background.add(theirScore);
+		
 		background.repaint();
 	}
 
