@@ -13,6 +13,9 @@ public class Game {
 	 */
 	private static final int BOOKSIZE = 4;
 
+	/**
+	 * set the number of cards in the players hand.
+	 */
 	private static final int HANDSIZE = 7;
 
 	/**
@@ -34,11 +37,6 @@ public class Game {
 	 * instantiates a new AI player.
 	 */
 	private AiPlayer ai;
-
-	/**
-	 * scanner for taking in user input.
-	 */
-	private Scanner reader = new Scanner(System.in);
 
 
 
@@ -86,30 +84,6 @@ public class Game {
 		return BOOKSIZE;
 	}
 
-/**************************************************************************
-	 * Scans a rank from user text input.
-	 *
-	 * @return The rank the user entered
-**************************************************************************/
-	public Rank scanRank() {
-		boolean running = true;
-		String rankAsked = null;
-		Rank temp = null;
-		while (running) {
-rankAsked = this.reader.next(); // Scans the next token of the
-	// input as a Char.
-			try {
-				// but this validates with all the enum values
-				Rank.valueOf(rankAsked.toUpperCase());
-				temp = Rank.valueOf(rankAsked.toUpperCase());
-				running = false;
-			} catch (IllegalArgumentException e) {
-	System.out.println("invalid option, please try another. ");
-			}
-		}
-
-		return temp;
-	}
 
 	/**
 	 * Method for updating score and tell player they got a point.
@@ -123,7 +97,7 @@ rankAsked = this.reader.next(); // Scans the next token of the
 
 		if (ai.checkForBook()) {
 			gui.getTheirMsg().setText("You scored a point!");
-			gui.getTheirMsg().setText("Your Score:" + ai.getScore());
+		gui.getTheirMsg().setText("Your Score:" + ai.getScore());
 		}
 
 //		gui.showCards();
@@ -301,10 +275,6 @@ rankAsked = this.reader.next(); // Scans the next token of the
 		this.playerTurn = playerTurn;
 	}
 
-	/*
-	 * public static void newGame(){ game1 = new Game();
-	 *
-	 * }
-	 */
+
 
 }

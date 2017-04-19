@@ -57,7 +57,10 @@ public class GUIgoFish {
 	 **/
 	 private int wOffset, hOffset;
 
-	 HashMap<String, JButton> cardButtons;
+	 /**
+	 * hasmap for the cards.
+	 */
+	HashMap<String, JButton> cardButtons;
 
 
 
@@ -119,20 +122,20 @@ public class GUIgoFish {
 
 		int sayWidth = store.getImages().get("pbub").getIconWidth();
 		int sayHeight = store.getImages().get("pbub").getIconHeight();
-		int sayX = panel.getWidth()/2 - wOffset;
-		int sayY = panel.getHeight()/2;
+		int sayX = panel.getWidth() / 2 - wOffset;
+		int sayY = panel.getHeight() / 2;
 
 		youSay = new JLabel();
 		sayY -= hOffset * 1.5;
 		youSay.setIcon(store.getImages().get("pbub"));
-		youSay.setBounds(sayX,sayY,sayWidth,sayHeight);
+		youSay.setBounds(sayX, sayY, sayWidth, sayHeight);
 		youSay.setOpaque(false);
 		background.add(youSay);
 
 		theySay = new JLabel();
 		theySay.setIcon(store.getImages().get("aibub"));
 		sayY -= hOffset * 8.75;
-		theySay.setBounds(sayX,sayY,sayWidth,sayHeight);
+		theySay.setBounds(sayX, sayY, sayWidth, sayHeight);
 		theySay.setOpaque(false);
 		theySay.setVisible(false);
 		background.add(theySay);
@@ -185,6 +188,17 @@ public class GUIgoFish {
 
 		JMenuItem mntmSaveGame = new JMenuItem("Save Game");
 		mnFile.add(mntmSaveGame);
+		
+		JMenuItem mntmEXIT = new JMenuItem("Exit");
+		mntmEXIT.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				System.exit(0);
+				
+			}
+
+		});
+		mnFile.add(mntmEXIT);
 		frame.getContentPane().setLayout(null);
 
 		JButton btnGoFish = new JButton("Go Fish");
@@ -259,8 +273,8 @@ public class GUIgoFish {
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
 			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
-			cardButton.setBounds(x, y, width, height);
-
+			cardButton.setBounds(x, y+130, width, height);
+ 
 			cardButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
@@ -272,7 +286,8 @@ public class GUIgoFish {
 						ArrayList<Card> returnedCards = game.getAi()
 								.askCard(rank);
 						if (returnedCards.size() > 0) {
-							printTxt("Yup, here are " + returnedCards.size() + " " + returnedCards.get(0).getRank().toString() + "s!", false);
+						printTxt("Yup, here are " + returnedCards.size() +
+			" " + returnedCards.get(0).getRank().toString() + "s!", false);
 							game.getPlayer().setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
@@ -333,11 +348,11 @@ public class GUIgoFish {
 		int width = store.getImages().get("cardBack").getIconWidth();
 		int height = store.getImages().get("cardBack").getIconHeight();
 
-		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
+		for (int i = 0; i < game.getAi().getHand().size(); i++) {
 
 			JLabel cardBackLabel = new JLabel(
 					store.getImages().get("cardBack"));
-			cardBackLabel.setBounds(x, y, width, height);
+			cardBackLabel.setBounds(x, y-130, width, height);
 			background.add(cardBackLabel);
 
 			x += 50;
@@ -378,9 +393,13 @@ public class GUIgoFish {
 		}
 	}
 
-	public void printTxt(String msg, boolean playerSpeaks) {
+	/**
+	 * @param msg
+	 * @param playerSpeaks
+	 */
+	public void printTxt(final String msg, boolean playerSpeaks) {
 
-		Timer  timer = new Timer(1000, new ActionListener()
+		Timer  timer = new Timer(1500, new ActionListener()
         {
             @Override
 			public void actionPerformed(ActionEvent e)
@@ -477,26 +496,44 @@ public class GUIgoFish {
 		});
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getYourMsg() {
 		return yourMsg;
 	}
 
+	/**
+	 * @param yourMsg
+	 */
 	public void setYourMsg(JLabel yourMsg) {
 		this.yourMsg = yourMsg;
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getYourScore() {
 		return yourScore;
 	}
 
+	/**
+	 * @param yourScore
+	 */
 	public void setYourScore(JLabel yourScore) {
 		this.yourScore = yourScore;
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getTheirMsg() {
 		return theirMsg;
 	}
 
+	/**
+	 * @param theirMsg
+	 */
 	public void setTheirMsg(JLabel theirMsg) {
 		this.theirMsg = theirMsg;
 	}
