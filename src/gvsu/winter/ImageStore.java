@@ -64,6 +64,24 @@ public class ImageStore {
 						582, 282, Image.SCALE_SMOOTH));
 		images.put("player", player);
 
+		ImageIcon speech = new ImageIcon(
+				new ImageIcon("res/speech.png").getImage()
+				.getScaledInstance(
+						100, 140, Image.SCALE_SMOOTH));
+		images.put("speech", speech);
+
+		ImageIcon pbub = new ImageIcon(
+				new ImageIcon("res/pbub.png").getImage()
+				.getScaledInstance(
+						300, 300, Image.SCALE_SMOOTH));
+		images.put("pbub", pbub);
+
+		ImageIcon aibub = new ImageIcon(
+				new ImageIcon("res/aibub.png").getImage()
+				.getScaledInstance(
+						300, 300, Image.SCALE_SMOOTH));
+		images.put("aibub", aibub);
+
 
 
 
@@ -82,7 +100,7 @@ public class ImageStore {
 
 	public void loadBackground(Rectangle r) {
 		ImageIcon background = new ImageIcon(
-				new ImageIcon("res/background.png")
+				new ImageIcon("res/background2.jpg")
 				.getImage().getScaledInstance(
 						r.width, r.height, Image.SCALE_SMOOTH));
 		images.put("background", background);

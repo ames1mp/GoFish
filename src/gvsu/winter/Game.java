@@ -126,9 +126,9 @@ rankAsked = this.reader.next(); // Scans the next token of the
 			gui.getTheirMsg().setText("Your Score:" + ai.getScore());
 		}
 
-		gui.showCards();
-		gui.showAICards();
-		gui.showDeck();
+//		gui.showCards();
+//		gui.showAICards();
+//		gui.showDeck();
 
 	}
 

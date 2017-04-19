@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * @author Lanndon Rose
@@ -27,6 +29,8 @@ import javax.swing.JPanel;
  *
  */
 public class GUIgoFish {
+
+
 
 	/**  The container for the user interface. **/
 	private JFrame frame;
@@ -42,7 +46,7 @@ public class GUIgoFish {
 
 	/** Declare JLabels.**/
 	private JLabel yourMsg, theirMsg, yourScore, theirScore,
-	opponent, player, youSay, theySay, logo, background;
+	opponent, player, youSay, theySay, logo, background, speech;
 
 	/** Declare JButtons.**/
 	private JButton btnStart;
@@ -52,6 +56,10 @@ public class GUIgoFish {
 	 *
 	 **/
 	 private int wOffset, hOffset;
+
+	 HashMap<String, JButton> cardButtons;
+
+
 
 	/**
 	 * Constructor. Instantiates objects and
@@ -63,12 +71,12 @@ public class GUIgoFish {
 		store = new ImageStore();
 		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
 		hOffset = store.getImages().get("cardBack").getIconHeight() / 4;
+		cardButtons = new HashMap<String, JButton>();
 		initialize();
 	}
 
 	/** Defines and creates the GUI. **/
 	private void initialize() {
-
 
 		frame = new JFrame();
 
@@ -99,19 +107,35 @@ public class GUIgoFish {
 		opponent.setIcon(store.getImages().get("opponent"));
 		opponent.setBounds(1250, 0, 582, 282);
 
+		/*
+		speech = new JLabel();
+		speech.setIcon(store.getImages().get("sp"));
+		speech.setBounds(center(store.getImages().get("sp")));
+		speech.setOpaque(false);
+	*/
 		player = new JLabel();
 		player.setIcon(store.getImages().get("player"));
 		player.setBounds(1250, 670, 582, 282);
 
+		int sayWidth = store.getImages().get("pbub").getIconWidth();
+		int sayHeight = store.getImages().get("pbub").getIconHeight();
+		int sayX = panel.getWidth()/2 - wOffset;
+		int sayY = panel.getHeight()/2;
+
 		youSay = new JLabel();
-		youSay.setText("You say:");
-		youSay.setBounds(1250, 600, 100, 50);
+		sayY -= hOffset * 1.5;
+		youSay.setIcon(store.getImages().get("pbub"));
+		youSay.setBounds(sayX,sayY,sayWidth,sayHeight);
 		youSay.setOpaque(false);
+		background.add(youSay);
 
 		theySay = new JLabel();
-		theySay.setText("Opponent says:");
-		theySay.setBounds(1250, 300, 100, 50);
+		theySay.setIcon(store.getImages().get("aibub"));
+		sayY -= hOffset * 8.75;
+		theySay.setBounds(sayX,sayY,sayWidth,sayHeight);
 		theySay.setOpaque(false);
+		theySay.setVisible(false);
+		background.add(theySay);
 
 		yourMsg = (new JLabel());
 		yourMsg.setBounds(1500, 600, 100, 50);
@@ -146,7 +170,15 @@ public class GUIgoFish {
 		menuBar.add(mnFile);
 
 		JMenuItem mntmNewGame = new JMenuItem("New Game");
+		mntmNewGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				newGame();
+			}
+
+		});
 		mnFile.add(mntmNewGame);
+
 
 		JMenuItem mntmOpenSave = new JMenuItem("Open Save");
 		mnFile.add(mntmOpenSave);
@@ -212,9 +244,12 @@ public class GUIgoFish {
 	/**
 	 *
 	 */
+
+
 	public void showCards() {
-		int x = wOffset;
-		int y = (panel.getHeight()) - (int) (hOffset * 8.5);
+
+		int x = wOffset * 15;
+		int y = (int) ((panel.getHeight()) - (hOffset * 14.75));
 		int width = store.getImages().get("cardBack").getIconWidth();
 		int height = store.getImages().get("cardBack").getIconHeight();
 
@@ -222,19 +257,22 @@ public class GUIgoFish {
 			ImageIcon card = store.getImages().get(game.getPlayer()
 					.getHand().get(i).toString());
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
+			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
 			cardButton.setBounds(x, y, width, height);
 
 			cardButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
-
+					printTxt("Got any " + rank.toString() + "s?", true);
 					// PLAYER TURN LOGIC
 					if (game.isPlayerTurn()) {
+
 						// Card request = game.getPlayer().getHand().get(i);
 						ArrayList<Card> returnedCards = game.getAi()
 								.askCard(rank);
 						if (returnedCards.size() > 0) {
+							printTxt("Yup, here are " + returnedCards.size() + " " + returnedCards.get(0).getRank().toString() + "s!", false);
 							game.getPlayer().setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
@@ -242,10 +280,9 @@ public class GUIgoFish {
 							game.setPlayerTurn(false);
 
 						} else {
-							getTheirMsg().setText("Go Fish!");
+							printTxt("Go Fish!", false);
 							if (game.getPlayer().goFish(rank)) {
-								getYourMsg().setText(
-										"You Got your Card! FREE TURN");
+								printTxt("I got my card! Free turn!", true);
 								game.updateGame();
 								updateView();
 							} else {
@@ -257,6 +294,7 @@ public class GUIgoFish {
 						// AI TURN LOGIC
 					} else {
 						Rank request = game.getAi().aiTurn();
+						printTxt("Got any " + rank.toString() + "s?", false);
 						ArrayList<Card> returnedCards = game.getPlayer()
 								.askCard(request);
 						if (returnedCards.size() > 0) {
@@ -266,10 +304,9 @@ public class GUIgoFish {
 							updateView();
 							game.setPlayerTurn(true);
 						} else {
-							getYourMsg().setText("Go Fish!");
+							printTxt("Go Fish!", true);
 							if (game.getAi().goFish(request)) {
-								getTheirMsg().setText(
-										"You Got your Card! FREE TURN");
+								printTxt("I got my card! Free turn!", false);
 								game.setPlayerTurn(true);
 								game.updateGame();
 								updateView();
@@ -284,22 +321,15 @@ public class GUIgoFish {
 				}
 			});
 			background.add(cardButton);
-			/*
-			 * JButton btButton = new JButton(card);
-			 * btButton.addActionListener(new ActionListener() {
-			 *
-			 * @Override public void actionPerformed(final ActionEvent e) {
-			 * game.getAi().askCard(card.getDescription()); } });
-			 * btButton.setBounds(X, Y, 113, 149); panel.add(btButton);
-			 */
 			x += 50;
 
 		}
 	}
 
 	public void showAICards() {
-		int x = wOffset;
-		int y = (int) (hOffset * 4.5);
+
+		int x = wOffset * 15;
+		int y = hOffset * 10;
 		int width = store.getImages().get("cardBack").getIconWidth();
 		int height = store.getImages().get("cardBack").getIconHeight();
 
@@ -348,19 +378,72 @@ public class GUIgoFish {
 		}
 	}
 
+	public void printTxt(String msg, boolean playerSpeaks) {
+
+		Timer  timer = new Timer(1000, new ActionListener()
+        {
+            @Override
+			public void actionPerformed(ActionEvent e)
+            {
+                updateView();
+                panel.add(theySay);
+            	theySay.setVisible(true);
+            }
+        });
+        timer.setRepeats(false);
+
+
+		youSay.setText(msg);
+		youSay.setHorizontalTextPosition(JLabel.CENTER);
+		youSay.setVerticalTextPosition(JLabel.CENTER);
+
+		if (playerSpeaks) {
+			background.remove(youSay);
+			background.remove(theySay);
+			background.repaint();
+			timer.start();
+
+			background.remove(youSay);
+			background.remove(theySay);
+			background.repaint();
+			panel.repaint();
+			updateView();
+		}  else {
+			panel.add(theySay);
+
+			//background.remove(youSay);
+			//background.remove(theySay);
+			//background.repaint();
+			//background.add(theySay);
+			//background.repaint();
+			///background.remove(youSay);
+			//background.remove(theySay);
+			//background.repaint();
+			//panel.repaint();
+			//updateView();
+			 theySay.setText(msg);
+				theySay.setHorizontalTextPosition(JLabel.CENTER);
+				theySay.setVerticalTextPosition(JLabel.CENTER);
+			timer.start();
+		}
+
+		//return speech;
+	}
+
 	/**
 	 * reloads all the items back to the panel.
 	 */
 	private void updateView() {
-		panel.removeAll();
+		background.removeAll();
 		panel.add(background);
 		showCards();
-		showDeck();
+		//background.add(printTxt("aasdfasdf", false));
 		showAICards();
-		background.add(opponent);
-		background.add(player);
-		background.add(youSay);
-		background.add(theySay);
+		//background.add(opponent);
+		//background.add(player);
+
+		//background.add(youSay);
+		//background.add(theySay);
 		background.add(yourMsg);
 		background.add(theirMsg);
 		background.add(yourScore);
@@ -370,7 +453,9 @@ public class GUIgoFish {
 
 	private void newGame() {
 		game = new Game(this);
+		updateView();
 	}
+
 
 	/**
 	 * Launch the application.
