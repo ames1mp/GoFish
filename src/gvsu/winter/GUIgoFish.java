@@ -2,7 +2,6 @@ package gvsu.winter;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,10 +12,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -25,8 +25,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.JFileChooser;
-import javax.swing.AbstractAction;
 
 
 
@@ -44,7 +42,7 @@ public class GUIgoFish implements Serializable {
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -73,19 +71,14 @@ public class GUIgoFish implements Serializable {
 	 **/
 	 private int wOffset, hOffset;
 
-	 /**
-	 * hasmap for the cards.
-	 */
-	HashMap<String, JButton> cardButtons;
-
-
 
 	/**
 	 * Constructor. Instantiates objects and
 	 * calls the initialize method to define the GUI.
 	 **/
 
-	public GUIgoFish() {
+
+	 public GUIgoFish() {
 		game = new Game(this);
 		store = new ImageStore();
 		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
@@ -102,8 +95,6 @@ public class GUIgoFish implements Serializable {
 		frame.setUndecorated(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
 
 		panel.setBounds(frame.getBounds());
 		panel.setBackground(Color.orange);
@@ -138,13 +129,13 @@ public class GUIgoFish implements Serializable {
 		sayY -= hOffset * 1.5;
 		youSay.setIcon(store.getImages().get("pbub"));
 		youSay.setBounds(sayX, sayY, sayWidth, sayHeight);
-		background.add(youSay);
+
 
 		theySay = new JLabel();
 		theySay.setIcon(store.getImages().get("aibub"));
 		sayY -= hOffset * 8.75;
-		theySay.setBounds(sayX-25, sayY+95, sayWidth, sayHeight);
-		background.add(theySay);
+		theySay.setBounds(sayX - 25, sayY + 95, sayWidth, sayHeight);
+
 
 		yourMsg = (new JLabel());
 		yourMsg.setBounds(1500, 600, 100, 50);
@@ -189,7 +180,14 @@ public class GUIgoFish implements Serializable {
 		mnFile.add(mntmNewGame);
 
 
-		JMenuItem mntmOpenSave = new JMenuItem(new AbstractAction("Load Game"){
+		JMenuItem mntmOpenSave = new JMenuItem(
+				new AbstractAction("Load Game") {
+			/**
+					 *
+					 */
+					private static final long serialVersionUID = 1L;
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String userName = System.getProperty("user.name");
 				File defaultDirectory = new File("C:\\Users\\" + userName + "\\Documents\\gofish");
@@ -200,67 +198,74 @@ public class GUIgoFish implements Serializable {
 						System.out.println("There was an error creating the directory: " + ex.getMessage());
 					}
 				}
-				
-				JFileChooser fc = new JFileChooser(defaultDirectory);
-				int returnVal = fc.showOpenDialog(fc.getParent());
-				if(returnVal == JFileChooser.APPROVE_OPTION) { 
-					String saveFile = fc.getSelectedFile().getAbsolutePath().toString();
+
+				JFileChooser fc = new JFileChooser(
+						defaultDirectory);
+				int returnVal = fc.showOpenDialog(
+						fc.getParent());
+				if (returnVal == JFileChooser
+						.APPROVE_OPTION) {
+					String saveFile = fc.getSelectedFile()
+					.getAbsolutePath().toString();
 					try {
-						FileInputStream fis = new FileInputStream(saveFile);
-						ObjectInputStream ois = new ObjectInputStream(fis);
+						FileInputStream fis
+						= new FileInputStream(saveFile);
+						ObjectInputStream ois
+						= new ObjectInputStream(fis);
 						game = (Game) ois.readObject();
-						System.out.println("The game has successfully loaded");
+						System.out.println(
+						"The game has successfully "
+						+ "loaded");
 						panel.revalidate();
 						background.revalidate();
 						panel.repaint();
 						background.repaint();
 						showCards();
 					} catch (Exception e1) {
-						System.out.println("There was an error opening the file: " + e1.getMessage());
+						System.out.println("There was "
+						+ "an error opening the file: "
+						+ e1.getMessage());
 						e1.printStackTrace();
 					}
 				}
 			}
 		});
 		mnFile.add(mntmOpenSave);
-//		mntmOpenSave.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(final ActionEvent e) {
-//				Game.loadObject();
-//				game = Game.getLoadGame();
-//				panel.removeAll();
-//				background.removeAll();
-//				panel.add(background);
-//				showCards();
-//				showAICards();
-//				background.repaint();
-//				
-//			}
-//
-//		});
-		
 
-		JMenuItem mntmSaveGame = new JMenuItem(new AbstractAction("Save Game"){
-			public void actionPerformed(ActionEvent e) {
-				String userName = System.getProperty("user.name");
-				File defaultDirectory = new File("C:\\Users\\" + userName + "\\Documents\\gofish");
-				if(!defaultDirectory.exists()) {
+		JMenuItem mntmSaveGame = new JMenuItem(new
+				AbstractAction("Save Game"){
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				String userName = System.getProperty(
+				"user.name");
+				File defaultDirectory = new File("C:\\Users\\"
+				+ userName + "\\Documents\\gofish");
+				if (!defaultDirectory
+						.exists()) {
 					try {
 						defaultDirectory.mkdir();
 					} catch (Exception ex) {
-						System.out.println("There was an error creating the directory: " + ex.getMessage());
+						System.out.println("There was "
+						+ "an error creating the "
+						+ "directory: "
+						+ ex.getMessage());
 					}
 				}
-				
+
 				JFileChooser fc = new JFileChooser(defaultDirectory);
 				int returnVal = fc.showSaveDialog(fc.getParent());
-				
+
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					String saveFile = fc.getSelectedFile().getAbsolutePath().toString();
 					if(!saveFile.contains(".ser")) {
 						 saveFile = saveFile + ".ser";
 					}
-					
+
 					try {
 						FileOutputStream fos = new FileOutputStream(saveFile);
 						ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -274,13 +279,13 @@ public class GUIgoFish implements Serializable {
 			}
 		});
 		mnFile.add(mntmSaveGame);
-		
+
 		JMenuItem mntmEXIT = new JMenuItem("Exit");
 		mntmEXIT.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				System.exit(0);
-				
+
 			}
 
 		});
@@ -310,6 +315,8 @@ public class GUIgoFish implements Serializable {
 			}
 		});
 		panel.add(btnStart);
+
+
 	}
 
 	/**
@@ -341,12 +348,11 @@ public class GUIgoFish implements Serializable {
 		return r;
 	}
 
-	/**
-	 *
-	 */
 
 
 	public void showCards() {
+
+		game.getPlayer().sortHand();
 
 		int x = wOffset * 15;
 		int y = (int) ((panel.getHeight()) - (hOffset * 14.75));
@@ -354,17 +360,19 @@ public class GUIgoFish implements Serializable {
 		int height = store.getImages().get("cardBack").getIconHeight();
 
 		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
+
 			ImageIcon card = store.getImages().get(game.getPlayer()
 					.getHand().get(i).toString());
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
 			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
 			cardButton.setBounds(x, y+135, width, height);
- 
+
 			cardButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
 					printTxt("Got any " + rank.toString() + "s?", true);
+
 					// PLAYER TURN LOGIC
 					if (game.isPlayerTurn()) {
 
@@ -379,7 +387,6 @@ public class GUIgoFish implements Serializable {
 							game.updateGame();
 							updateView();
 							game.setPlayerTurn(false);
-
 						} else {
 							printTxt("Go Fish!", false);
 							if (game.getPlayer().goFish(rank)) {
@@ -395,10 +402,14 @@ public class GUIgoFish implements Serializable {
 						// AI TURN LOGIC
 					} else {
 						Rank request = game.getAi().aiTurn();
-						printTxt("Got any " + rank.toString() + "s?", false);
+						printTxt("Got any " + request.toString() + "s?", false);
 						ArrayList<Card> returnedCards = game.getPlayer()
 								.askCard(request);
 						if (returnedCards.size() > 0) {
+							printTxt("Sure do. Here "
+							+ "are " + returnedCards.size() + " "
+							+ returnedCards.get(0).getRank()
+							.toString(), true);
 							game.getAi().setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
@@ -447,43 +458,26 @@ public class GUIgoFish implements Serializable {
 
 	public void showDeck() {
 
-		int X = 40;
-		int Y = (panel.getHeight() / 2) - (3 * store.getImages().get("cardBack").getIconHeight() / 4);
+		int x = 40;
+		int y = (panel.getHeight() / 2) - (3 * store.getImages()
+				.get("cardBack").getIconHeight() / 4);
 		for (int i = 0; i < game.getDeck().getSize(); i++) {
 
-			JLabel cardBackLabel = new JLabel(store.getImages().get("cardBack"));
-			cardBackLabel.setBounds(X, Y, 113, 149);
+			JLabel cardBackLabel = new JLabel(store.getImages()
+					.get("cardBack"));
+			cardBackLabel.setBounds(x, y, 113, 149);
 			background.add(cardBackLabel);
 
-			X += 25;
+			x += 25;
 		}
 	}
 
-	/**
-	 * puts the deck of cards on the screen.
-	 */
-	public void showScore() {
-		int X = 40;
-		int Y = 400;
-		for (int i = 0; i < 38; i++) {
-
-			ImageIcon Card = new ImageIcon(
-					new ImageIcon("res/cardBack.png").getImage()
-							.getScaledInstance(100, 140, Image.SCALE_SMOOTH));
-
-			JLabel cardBack = new JLabel(Card);
-			cardBack.setBounds(X, Y, 113, 149);
-			panel.add(cardBack);
-
-			X = (X + 40);
-		}
-	}
 
 	/**
 	 * @param msg
 	 * @param playerSpeaks
 	 */
-	public void printTxt(final String msg, boolean playerSpeaks) {
+	public void printTxt(final String msg, final boolean playerSpeaks) {
 
 		Timer  timer = new Timer(1500, new ActionListener()
         {
@@ -491,37 +485,34 @@ public class GUIgoFish implements Serializable {
 			public void actionPerformed(ActionEvent e)
             {
                 updateView();
-                panel.add(theySay);
-            	theySay.setVisible(true);
+                if (playerSpeaks) {
+                	panel.add(youSay);
+                  	youSay.setVisible(true);
+                } else {
+                    panel.add(theySay);
+                	theySay.setVisible(true);
+                }
+
             }
         });
         timer.setRepeats(false);
 
-
-		youSay.setText(msg);
-		youSay.setHorizontalTextPosition(JLabel.CENTER);
-		youSay.setVerticalTextPosition(JLabel.CENTER);
-
 		if (playerSpeaks) {
-			background.remove(youSay);
-			background.remove(theySay);
-			background.repaint();
+			panel.add(youSay);
+			youSay.setText(msg);
+			youSay.setHorizontalTextPosition(JLabel.CENTER);
+			youSay.setVerticalTextPosition(JLabel.CENTER);
 			timer.start();
 
-			background.remove(youSay);
-			background.remove(theySay);
-			background.repaint();
-			panel.repaint();
-			updateView();
 		}  else {
 			panel.add(theySay);
-			 theySay.setText(msg);
-				theySay.setHorizontalTextPosition(JLabel.CENTER);
-				theySay.setVerticalTextPosition(JLabel.CENTER);
+			theySay.setText(msg);
+			theySay.setHorizontalTextPosition(JLabel.CENTER);
+			theySay.setVerticalTextPosition(JLabel.CENTER);
 			timer.start();
 		}
 
-		//return speech;
+		updateView();
 	}
 
 	/**
@@ -530,20 +521,8 @@ public class GUIgoFish implements Serializable {
 	private void updateView() {
 		background.removeAll();
 		panel.add(background);
-		background.add(youSay);
 		showCards();
-		//background.add(printTxt("aasdfasdf", false));
 		showAICards();
-		//background.add(opponent);
-		//background.add(player);
-
-		//background.add(youSay);
-		//background.add(theySay);
-		background.add(yourMsg);
-		background.add(theirMsg);
-		background.add(yourScore);
-		background.add(theirScore);
-		
 		background.repaint();
 	}
 
@@ -617,6 +596,6 @@ public class GUIgoFish implements Serializable {
 
 	public static void getERROR(){
 JOptionPane.showMessageDialog(frame, "Eggs are not supposed to be green.");
-		
+
 	}
 }

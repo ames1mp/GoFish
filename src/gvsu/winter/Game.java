@@ -64,14 +64,14 @@ public class Game implements Serializable {
 	/**
 	 * method for setting the gui up with instances of game aspects.
 	 *
-	 * @param gui
+	 * @param guiC
 	 *            gofish user interface variable
 	 */
-	public Game(final GUIgoFish gui) {
+	public Game(final GUIgoFish guiC) {
 		this.deck = new Deck();
 		this.player = new Player(this.deck, this);
 		this.ai = new AiPlayer(this.deck, this);
-		this.gui = gui;
+		this.gui = guiC;
 
 		// adds seven cards to the players hand
 		for (int i = 0; i < HANDSIZE; ++i) {
@@ -107,16 +107,8 @@ public class Game implements Serializable {
 	 * Method for updating score and tell player they got a point.
 	 */
 	public void updateGame() {
-
-		if (player.checkForBook()) {
-			gui.getYourMsg().setText("You scored a point!");
-			gui.getYourScore().setText("Your Score:" + player.getScore());
-		}
-
-		if (ai.checkForBook()) {
-			gui.getTheirMsg().setText("You scored a point!");
-			gui.getTheirMsg().setText("Your Score:" + ai.getScore());
-		}
+        player.checkForBook();
+		ai.checkForBook();
 	}
 
 	public static Game getLoadGame(){
