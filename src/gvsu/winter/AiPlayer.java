@@ -1,4 +1,5 @@
 package gvsu.winter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,8 +10,12 @@ import java.util.Random;
  * @author Michael Ames
  * @version February 2017
  ***************************************************/
-public class AiPlayer extends Player {
+public class AiPlayer extends Player implements Serializable{
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * A variable which holds the last rank the AI asked for.
      */
     private Rank lastChoice = null;

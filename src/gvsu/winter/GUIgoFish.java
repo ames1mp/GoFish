@@ -6,6 +6,12 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,8 +22,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.JFileChooser;
+import javax.swing.AbstractAction;
+
+
 
 /**
  * @author Lanndon Rose
@@ -28,12 +39,17 @@ import javax.swing.Timer;
  * for the application.
  *
  */
-public class GUIgoFish {
+public class GUIgoFish implements Serializable {
 
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**  The container for the user interface. **/
-	private JFrame frame;
+	private static JFrame frame;
 
 	/** The panel for the game interface. **/
 	private JPanel panel = new JPanel();
@@ -57,7 +73,10 @@ public class GUIgoFish {
 	 **/
 	 private int wOffset, hOffset;
 
-	 HashMap<String, JButton> cardButtons;
+	 /**
+	 * hasmap for the cards.
+	 */
+	HashMap<String, JButton> cardButtons;
 
 
 
@@ -71,7 +90,6 @@ public class GUIgoFish {
 		store = new ImageStore();
 		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
 		hOffset = store.getImages().get("cardBack").getIconHeight() / 4;
-		cardButtons = new HashMap<String, JButton>();
 		initialize();
 	}
 
@@ -107,34 +125,25 @@ public class GUIgoFish {
 		opponent.setIcon(store.getImages().get("opponent"));
 		opponent.setBounds(1250, 0, 582, 282);
 
-		/*
-		speech = new JLabel();
-		speech.setIcon(store.getImages().get("sp"));
-		speech.setBounds(center(store.getImages().get("sp")));
-		speech.setOpaque(false);
-	*/
 		player = new JLabel();
 		player.setIcon(store.getImages().get("player"));
 		player.setBounds(1250, 670, 582, 282);
 
 		int sayWidth = store.getImages().get("pbub").getIconWidth();
 		int sayHeight = store.getImages().get("pbub").getIconHeight();
-		int sayX = panel.getWidth()/2 - wOffset;
-		int sayY = panel.getHeight()/2;
+		int sayX = panel.getWidth() / 2 - wOffset;
+		int sayY = panel.getHeight() / 2;
 
 		youSay = new JLabel();
 		sayY -= hOffset * 1.5;
 		youSay.setIcon(store.getImages().get("pbub"));
-		youSay.setBounds(sayX,sayY,sayWidth,sayHeight);
-		youSay.setOpaque(false);
+		youSay.setBounds(sayX, sayY, sayWidth, sayHeight);
 		background.add(youSay);
 
 		theySay = new JLabel();
 		theySay.setIcon(store.getImages().get("aibub"));
 		sayY -= hOffset * 8.75;
-		theySay.setBounds(sayX,sayY,sayWidth,sayHeight);
-		theySay.setOpaque(false);
-		theySay.setVisible(false);
+		theySay.setBounds(sayX-25, sayY+95, sayWidth, sayHeight);
 		background.add(theySay);
 
 		yourMsg = (new JLabel());
@@ -180,11 +189,102 @@ public class GUIgoFish {
 		mnFile.add(mntmNewGame);
 
 
-		JMenuItem mntmOpenSave = new JMenuItem("Open Save");
+		JMenuItem mntmOpenSave = new JMenuItem(new AbstractAction("Load Game"){
+			public void actionPerformed(ActionEvent e) {
+				String userName = System.getProperty("user.name");
+				File defaultDirectory = new File("C:\\Users\\" + userName + "\\Documents\\gofish");
+				if(!defaultDirectory.exists()) {
+					try {
+						defaultDirectory.mkdir();
+					} catch (Exception ex) {
+						System.out.println("There was an error creating the directory: " + ex.getMessage());
+					}
+				}
+				
+				JFileChooser fc = new JFileChooser(defaultDirectory);
+				int returnVal = fc.showOpenDialog(fc.getParent());
+				if(returnVal == JFileChooser.APPROVE_OPTION) { 
+					String saveFile = fc.getSelectedFile().getAbsolutePath().toString();
+					try {
+						FileInputStream fis = new FileInputStream(saveFile);
+						ObjectInputStream ois = new ObjectInputStream(fis);
+						game = (Game) ois.readObject();
+						System.out.println("The game has successfully loaded");
+						panel.revalidate();
+						background.revalidate();
+						panel.repaint();
+						background.repaint();
+						showCards();
+					} catch (Exception e1) {
+						System.out.println("There was an error opening the file: " + e1.getMessage());
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		mnFile.add(mntmOpenSave);
+//		mntmOpenSave.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(final ActionEvent e) {
+//				Game.loadObject();
+//				game = Game.getLoadGame();
+//				panel.removeAll();
+//				background.removeAll();
+//				panel.add(background);
+//				showCards();
+//				showAICards();
+//				background.repaint();
+//				
+//			}
+//
+//		});
+		
 
-		JMenuItem mntmSaveGame = new JMenuItem("Save Game");
+		JMenuItem mntmSaveGame = new JMenuItem(new AbstractAction("Save Game"){
+			public void actionPerformed(ActionEvent e) {
+				String userName = System.getProperty("user.name");
+				File defaultDirectory = new File("C:\\Users\\" + userName + "\\Documents\\gofish");
+				if(!defaultDirectory.exists()) {
+					try {
+						defaultDirectory.mkdir();
+					} catch (Exception ex) {
+						System.out.println("There was an error creating the directory: " + ex.getMessage());
+					}
+				}
+				
+				JFileChooser fc = new JFileChooser(defaultDirectory);
+				int returnVal = fc.showSaveDialog(fc.getParent());
+				
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					String saveFile = fc.getSelectedFile().getAbsolutePath().toString();
+					if(!saveFile.contains(".ser")) {
+						 saveFile = saveFile + ".ser";
+					}
+					
+					try {
+						FileOutputStream fos = new FileOutputStream(saveFile);
+						ObjectOutputStream oos = new ObjectOutputStream(fos);
+						oos.writeObject(game);//!!!<-- is this null?
+						System.out.println("Saved the game successfully!");
+					} catch (Exception e1) {
+						System.out.println("There was an error saving the file: " + e1.getMessage());
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		mnFile.add(mntmSaveGame);
+		
+		JMenuItem mntmEXIT = new JMenuItem("Exit");
+		mntmEXIT.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				System.exit(0);
+				
+			}
+
+		});
+		mnFile.add(mntmEXIT);
 		frame.getContentPane().setLayout(null);
 
 		JButton btnGoFish = new JButton("Go Fish");
@@ -259,8 +359,8 @@ public class GUIgoFish {
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
 			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
-			cardButton.setBounds(x, y, width, height);
-
+			cardButton.setBounds(x, y+135, width, height);
+ 
 			cardButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
@@ -272,7 +372,8 @@ public class GUIgoFish {
 						ArrayList<Card> returnedCards = game.getAi()
 								.askCard(rank);
 						if (returnedCards.size() > 0) {
-							printTxt("Yup, here are " + returnedCards.size() + " " + returnedCards.get(0).getRank().toString() + "s!", false);
+						printTxt("Yup, here are " + returnedCards.size() +
+			" " + returnedCards.get(0).getRank().toString() + "s!", false);
 							game.getPlayer().setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
@@ -333,11 +434,11 @@ public class GUIgoFish {
 		int width = store.getImages().get("cardBack").getIconWidth();
 		int height = store.getImages().get("cardBack").getIconHeight();
 
-		for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
+		for (int i = 0; i < game.getAi().getHand().size(); i++) {
 
 			JLabel cardBackLabel = new JLabel(
 					store.getImages().get("cardBack"));
-			cardBackLabel.setBounds(x, y, width, height);
+			cardBackLabel.setBounds(x, y-135, width, height);
 			background.add(cardBackLabel);
 
 			x += 50;
@@ -378,9 +479,13 @@ public class GUIgoFish {
 		}
 	}
 
-	public void printTxt(String msg, boolean playerSpeaks) {
+	/**
+	 * @param msg
+	 * @param playerSpeaks
+	 */
+	public void printTxt(final String msg, boolean playerSpeaks) {
 
-		Timer  timer = new Timer(1000, new ActionListener()
+		Timer  timer = new Timer(1500, new ActionListener()
         {
             @Override
 			public void actionPerformed(ActionEvent e)
@@ -410,17 +515,6 @@ public class GUIgoFish {
 			updateView();
 		}  else {
 			panel.add(theySay);
-
-			//background.remove(youSay);
-			//background.remove(theySay);
-			//background.repaint();
-			//background.add(theySay);
-			//background.repaint();
-			///background.remove(youSay);
-			//background.remove(theySay);
-			//background.repaint();
-			//panel.repaint();
-			//updateView();
 			 theySay.setText(msg);
 				theySay.setHorizontalTextPosition(JLabel.CENTER);
 				theySay.setVerticalTextPosition(JLabel.CENTER);
@@ -436,6 +530,7 @@ public class GUIgoFish {
 	private void updateView() {
 		background.removeAll();
 		panel.add(background);
+		background.add(youSay);
 		showCards();
 		//background.add(printTxt("aasdfasdf", false));
 		showAICards();
@@ -448,6 +543,7 @@ public class GUIgoFish {
 		background.add(theirMsg);
 		background.add(yourScore);
 		background.add(theirScore);
+		
 		background.repaint();
 	}
 
@@ -477,32 +573,50 @@ public class GUIgoFish {
 		});
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getYourMsg() {
 		return yourMsg;
 	}
 
+	/**
+	 * @param yourMsg
+	 */
 	public void setYourMsg(JLabel yourMsg) {
 		this.yourMsg = yourMsg;
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getYourScore() {
 		return yourScore;
 	}
 
+	/**
+	 * @param yourScore
+	 */
 	public void setYourScore(JLabel yourScore) {
 		this.yourScore = yourScore;
 	}
 
+	/**
+	 * @return
+	 */
 	public JLabel getTheirMsg() {
 		return theirMsg;
 	}
 
+	/**
+	 * @param theirMsg
+	 */
 	public void setTheirMsg(JLabel theirMsg) {
 		this.theirMsg = theirMsg;
 	}
 
-
-
-
-
+	public static void getERROR(){
+JOptionPane.showMessageDialog(frame, "Eggs are not supposed to be green.");
+		
+	}
 }

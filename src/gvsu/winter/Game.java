@@ -1,18 +1,36 @@
 package gvsu.winter;
 
-import java.util.Scanner;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /******************************************************************************
  * @author Lanndon Rose
  * @author Michael Ames
  *****************************************************************************/
 
-public class Game {
+public class Game implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * sets the number of cards need to get a point.
 	 */
 	private static final int BOOKSIZE = 4;
 
+	/**
+	 * set the number of cards in the players hand.
+	 */
 	private static final int HANDSIZE = 7;
 
 	/**
@@ -28,28 +46,26 @@ public class Game {
 	/**
 	 * instantiates a new human player.
 	 */
-	private Player player;
+	private  Player player;
 
 	/**
 	 * instantiates a new AI player.
 	 */
-	private AiPlayer ai;
-
-	/**
-	 * scanner for taking in user input.
-	 */
-	private Scanner reader = new Scanner(System.in);
-
-
+	private  AiPlayer ai;
 
 	/**
 	 * instantiates the gui.
 	 */
-	private GUIgoFish gui;
+	private  GUIgoFish gui;
+
+	private static Game loadGame;
+
 
 	/**
 	 * method for setting the gui up with instances of game aspects.
-	 * @param gui gofish user interface variable
+	 *
+	 * @param gui
+	 *            gofish user interface variable
 	 */
 	public Game(final GUIgoFish gui) {
 		this.deck = new Deck();
@@ -71,6 +87,7 @@ public class Game {
 
 	/**
 	 * method for determining if it is the player turn or not.
+	 *
 	 * @return true or false
 	 */
 	public boolean isPlayerTurn() {
@@ -86,31 +103,6 @@ public class Game {
 		return BOOKSIZE;
 	}
 
-/**************************************************************************
-	 * Scans a rank from user text input.
-	 *
-	 * @return The rank the user entered
-**************************************************************************/
-	public Rank scanRank() {
-		boolean running = true;
-		String rankAsked = null;
-		Rank temp = null;
-		while (running) {
-rankAsked = this.reader.next(); // Scans the next token of the
-	// input as a Char.
-			try {
-				// but this validates with all the enum values
-				Rank.valueOf(rankAsked.toUpperCase());
-				temp = Rank.valueOf(rankAsked.toUpperCase());
-				running = false;
-			} catch (IllegalArgumentException e) {
-	System.out.println("invalid option, please try another. ");
-			}
-		}
-
-		return temp;
-	}
-
 	/**
 	 * Method for updating score and tell player they got a point.
 	 */
@@ -118,158 +110,18 @@ rankAsked = this.reader.next(); // Scans the next token of the
 
 		if (player.checkForBook()) {
 			gui.getYourMsg().setText("You scored a point!");
-		gui.getYourScore().setText("Your Score:" + player.getScore());
+			gui.getYourScore().setText("Your Score:" + player.getScore());
 		}
 
 		if (ai.checkForBook()) {
 			gui.getTheirMsg().setText("You scored a point!");
 			gui.getTheirMsg().setText("Your Score:" + ai.getScore());
 		}
-
-//		gui.showCards();
-//		gui.showAICards();
-//		gui.showDeck();
-
 	}
 
-/**************************************************************************
-	 * The main method for playing GoFish.
-	 *
-	 * @param args
-	 *            args
-	 *
- *************************************************************************/
-	// public static void main(final String[] args) {
-	// Game game = new Game();
-	//
-	// System.out.println("Welcome to Gofish");
-	// System.out.println("This version is single player, ");
-	// System.out.println("so you will being playing an AI.");
-	// System.out.println("The human player starts first.");
-	// String n = "S";
-	// while (!n.equalsIgnoreCase("b")) {
-	//
-	// System.out.println("Press B then Enter to begin");
-	// // Scans the next token of the input as a Char.
-	// n = game.reader.next();
-	// }
-	//
-	// System.out.println("Lets begin.");
-	// // adds seven cards to the players hand
-	// for (int l = 0; l < 7; l++) {
-	// game.player.setHand(game.player.getDeck().drawCard());
-	//
-	// }
-	// // adds seven cards to the AI players hand
-	// for (int l = 0; l < 7; l++) {
-	// game.ai.setHand(game.ai.getDeck().drawCard());
-	//
-	// }
-	// // checks to see if user got a point at the start of the game
-	// if (game.player.checkForBook()) {
-	// System.out.println("you got a point.");
-	// }
-	//
-	// game.player.checkForBook();
-	// System.out.println("");
-	//
-	// // games is over when the deck has no cards left
-	// while (game.deck.getSize() != 0) {
-	//
-	// if (game.player.checkForBook()) {
-	// System.out.println("you got a point. \n");
-	// }
-	//
-	// game.player.checkForBook();
-	// game.ai.checkForBook();
-	// System.out.println("Player Score: " + game.player.getScore());
-	// System.out.println("AI Score: " + game.ai.getScore() + "\n\n");
-	//
-	// System.out.println("Your Hand: ");
-	// // displays user hand
-	// game.player.displayHand();
-	// System.out.println("\n\n");
-	//
-	// ArrayList<Card> tempC = null;
-	// Rank temp = null;
-	//
-	// // print outs that tell user what is going on
-	// System.out.println("It's your turn \n");
-	// System.out.println("What rank would you like to ask for? \n");
-	//
-	// // Check that the user has the requested rank in his or her hand
-	// while (true) {
-	// Rank userInput = game.scanRank();
-	// if (game.player.hasRankInHand(userInput)) {
-	// temp = userInput;
-	// break;
-	// } else {
-	// System.out.println("Please request a rank that "
-	// + "you have in your hand");
-	// }
-	// }
-	//
-	// tempC = game.ai.askCard(temp);
-	//
-	// // checks to see if tempC was set to anything
-	// if (tempC.size() > 0) {
-	// for (Card c : tempC) {
-	// game.player.setHand(c);
-	// }
-	//
-	// tempC.clear();
-	//
-	// game.playerTurn = false;
-	//
-	// } else {
-	// System.out.println("AI did not have the card "
-	// + "you were looking for ");
-	// System.out.println("Go Fish! ");
-	// System.out.println("");
-	// if (game.player.goFish(temp)) {
-	// System.out.println("You got the card you asked "
-	// + "for from the deck");
-	// System.out.println("So you get to take your turn again.");
-	//
-	// game.playerTurn = true;
-	//
-	// } else {
-	// game.playerTurn = false;
-	// }
-	//
-	// }
-	//
-	// if (!game.playerTurn) {
-	// temp = game.ai.aiTurn();
-	// tempC = game.player.askCard(temp);
-	// if (tempC.size() > 0) {
-	// for (Card c : tempC) {
-	// game.ai.setHand(c);
-	// }
-	//
-	// tempC.clear();
-	//
-	// } else {
-	// game.ai.goFish(temp);
-	// }
-	//
-	// }
-	// }
-	//
-	// //checks to see who wins the game
-	// if (game.player.getScore() == game.ai.getScore()) {
-	// System.out.println("The game is a tie ");
-	// }
-	//
-	// if (game.player.getScore() < game.ai.getScore()) {
-	// System.out.println("The AI wins!");
-	//
-	// } else {
-	// System.out.println("You win!");
-	//
-	// }
-	//
-	// }
+	public static Game getLoadGame(){
+		return loadGame;
+	}
 
 	/**
 	 * @return deck the deck
@@ -293,18 +145,41 @@ rankAsked = this.reader.next(); // Scans the next token of the
 	}
 
 	/**
-	 * sets boolean to true or false depending on whether it is the players
-	 * turn or not.
-	 * @param playerTurn boolean
+	 * sets boolean to true or false depending on whether it is the players turn
+	 * or not.
+	 *
+	 * @param playerTurn
+	 *            boolean
 	 */
 	public void setPlayerTurn(final boolean playerTurn) {
 		this.playerTurn = playerTurn;
 	}
 
-	/*
-	 * public static void newGame(){ game1 = new Game();
-	 *
-	 * }
+	/**
+	 * method for saving game.
 	 */
+	public void writeObject() {
+		try (FileOutputStream file = new FileOutputStream("res/game.ser");
+				BufferedOutputStream buffer = new BufferedOutputStream(file);
+				ObjectOutputStream output = new ObjectOutputStream(buffer);) {
+			output.writeObject(this);
+			output.close();
+		} catch (IOException ex) {
+			GUIgoFish.getERROR();
+			ex.printStackTrace();
+		}
+	}
 
+	static void loadObject() {
+		try (InputStream file = new FileInputStream("res/game.ser");
+				InputStream buffer = new BufferedInputStream(file);
+				ObjectInput input = new ObjectInputStream(buffer);) {
+
+			 loadGame = (Game) input.readObject();
+		} catch (ClassNotFoundException ex) {
+
+		} catch (IOException ex) {
+
+		}
+	}
 }

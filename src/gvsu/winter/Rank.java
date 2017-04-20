@@ -1,12 +1,14 @@
 package gvsu.winter;
 
+import java.io.Serializable;
+
 /**
  * Enums used for the ranks of the cards in a deck.
  *
  * @author Lanndon Rose
  * @author Michael Ames
  */
-public enum Rank {
+public enum Rank implements Serializable{
 /**
  * Ranks of cards as Enums.
  * {@link gvsu.winter.Rank#ACE}
