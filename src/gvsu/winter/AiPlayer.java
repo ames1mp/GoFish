@@ -10,10 +10,8 @@ import java.util.Random;
  * @author Michael Ames
  * @version February 2017
  ***************************************************/
-public class AiPlayer extends Player implements Serializable{
-    /**
-	 * 
-	 */
+public class AiPlayer extends Player implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	/**
      * A variable which holds the last rank the AI asked for.
@@ -50,6 +48,7 @@ public class AiPlayer extends Player implements Serializable{
 
         // for each card in the player's hand loop through
         // every other card and compare ranks
+
         for (int i = 0; i < getHand().size(); i++) {
             for (int j = i; j < getHand().size(); j++) {
 
@@ -82,3 +81,5 @@ public class AiPlayer extends Player implements Serializable{
         return tempR;
     }
 }
+
+

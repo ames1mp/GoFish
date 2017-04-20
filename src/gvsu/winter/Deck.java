@@ -11,9 +11,7 @@ import java.util.Random;
  */
 public class Deck implements Serializable {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -45,8 +43,6 @@ public class Deck implements Serializable {
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-
-
 
 	/**
 	 * @param pDeck deck to set

@@ -3,16 +3,16 @@ package gvsu.winter;
 import java.io.Serializable;
 
 /**
- * class for the cards of a deck.
+ * This class represents a playing card, and holds the
+ * rank and suit of the card. It also contains a file name
+ * that corresponds to the image file for that card.
  *
  * @author Lanndon Rose
  * @author Michael Ames
  */
 
 public class Card implements Serializable {
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -25,12 +25,10 @@ public class Card implements Serializable {
      */
     private Rank rank;
 
+    /**
+     * The name of the card's image file.
+     */
     private String fileName;
-
-
-
-
-
 
     /**
      * Card constructor.
@@ -46,23 +44,31 @@ public class Card implements Serializable {
         fileName = genFileName();
     }
 
+    /**
+     *Returns the name of the card's image file.
+     * @return fileName the file name.
+     */
     public String getFilename() {
     	return fileName;
     }
 
-    private String genFileName(){
-    	String fileName;
-    	fileName = "res/";
-    	fileName += getRank().toString().toUpperCase();
-    	fileName +="_of_";
-    	fileName += getSuit().toString().toLowerCase();
-    	fileName +=".png";
-    	return fileName;
-
+    /**
+     * Generates the file name of the card's
+     * corresponding image file.
+     * @return lFileName a filename
+     */
+    private String genFileName() {
+    	String lFileName = "";
+    	lFileName = "res/";
+    	lFileName += getRank().toString().toUpperCase();
+    	lFileName += "_of_";
+    	lFileName += getSuit().toString().toLowerCase();
+    	lFileName += ".png";
+    	return lFileName;
 	}
 
     /**
-     * getter method to retrieve the rank of a card.
+     * Getter method to retrieve the rank of a card.
      *
      * @return rank
      */
@@ -71,7 +77,7 @@ public class Card implements Serializable {
     }
 
     /**
-     * sets the rank of card to a specified enum value.
+     * Sets the rank of card to a specified enum value.
      *
      * @param trank
      *            card rank
@@ -81,7 +87,7 @@ public class Card implements Serializable {
     }
 
     /**
-     * returns suit of a card.
+     * Returns suit of a card.
      *
      * @return suit
      */
@@ -90,7 +96,7 @@ public class Card implements Serializable {
     }
 
     /**
-     * set suit of a card.
+     * Set suit of a card.
      *
      * @param temp
      *            suit of a card
@@ -99,13 +105,9 @@ public class Card implements Serializable {
         this.suit = temp;
     }
 
- 
-
     /**
-     * toString method for displaying a card with rank and suit.
-     *
-     * {@link java.lang.Object#toString()}
-     * @return rankSTR
+     * Returns a string representation of the card
+     * in the form 'rank of suit'.
      */
     @Override
     public String toString() {
@@ -115,4 +117,6 @@ public class Card implements Serializable {
     }
 
 }
+
+
 

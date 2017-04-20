@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -34,12 +33,9 @@ import javax.swing.Timer;
  * @version Winter 2017
  *
  * Specifies the GUI layout, and contains the main driver method
- * for the application.
- *
+ * and game logic for the application.
  */
 public class GUIgoFish implements Serializable {
-
-
 
 	/**
 	 *
@@ -59,8 +55,8 @@ public class GUIgoFish implements Serializable {
 	private ImageStore store;
 
 	/** Declare JLabels.**/
-	private JLabel yourMsg, theirMsg, yourScore, theirScore,
-	opponent, player, youSay, theySay, logo, background, speech;
+	private JLabel winner,
+	youSay, theySay, logo, background;
 
 	/** Declare JButtons.**/
 	private JButton btnStart;
@@ -79,7 +75,7 @@ public class GUIgoFish implements Serializable {
 
 
 	 public GUIgoFish() {
-		game = new Game(this);
+		game = new Game();
 		store = new ImageStore();
 		wOffset = store.getImages().get("cardBack").getIconWidth() / 4;
 		hOffset = store.getImages().get("cardBack").getIconHeight() / 4;
@@ -112,13 +108,6 @@ public class GUIgoFish implements Serializable {
 		logo.setBounds(center(store.getImages().get("logo")));
 		panel.add(logo);
 
-		opponent = new JLabel();
-		opponent.setIcon(store.getImages().get("opponent"));
-		opponent.setBounds(1250, 0, 582, 282);
-
-		player = new JLabel();
-		player.setIcon(store.getImages().get("player"));
-		player.setBounds(1250, 670, 582, 282);
 
 		int sayWidth = store.getImages().get("pbub").getIconWidth();
 		int sayHeight = store.getImages().get("pbub").getIconHeight();
@@ -130,38 +119,15 @@ public class GUIgoFish implements Serializable {
 		youSay.setIcon(store.getImages().get("pbub"));
 		youSay.setBounds(sayX, sayY, sayWidth, sayHeight);
 
-
 		theySay = new JLabel();
 		theySay.setIcon(store.getImages().get("aibub"));
 		sayY -= hOffset * 8.75;
 		theySay.setBounds(sayX - 25, sayY + 95, sayWidth, sayHeight);
 
-
-		yourMsg = (new JLabel());
-		yourMsg.setBounds(1500, 600, 100, 50);
-		yourMsg.setBackground(Color.WHITE);
-		yourMsg.setText("text");
-		yourMsg.setOpaque(false);
-
-		theirMsg = (new JLabel());
-		theirMsg.setBounds(1500, 300, 100, 50);
-		theirMsg.setBackground(Color.WHITE);
-		theirMsg.setText("text");
-		theirMsg.setOpaque(false);
-
-		theirScore = new JLabel();
-		theirScore.setText("SCORE:T");
-		theirScore.setBounds(wOffset, (int) (hOffset * 4.5)
-				- hOffset * 2, 50, 50);
-		theirScore.setOpaque(false);
-		//panel.add(theirScore);
-
-		yourScore = new JLabel();
-		yourScore.setText("SCORE:Y");
-		yourScore.setBounds(wOffset, (panel.getHeight())
-				- hOffset * 4, 50, 50);
-		yourScore.setOpaque(false);
-		//panel.add(yourScore);
+		winner = new JLabel();
+		winner.setText("SCORE:T");
+		winner.setBounds(center(600, 600));
+		winner.setOpaque(false);
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -182,20 +148,24 @@ public class GUIgoFish implements Serializable {
 
 		JMenuItem mntmOpenSave = new JMenuItem(
 				new AbstractAction("Load Game") {
-			/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				String userName = System.getProperty("user.name");
-				File defaultDirectory = new File("C:\\Users\\" + userName + "\\Documents\\gofish");
-				if(!defaultDirectory.exists()) {
+			public void actionPerformed(final ActionEvent e) {
+				String userName = System.getProperty(
+						"user.name");
+				File defaultDirectory = new File(
+				"C:\\Users\\" + userName
+				+ "\\Documents\\gofish");
+				if (!defaultDirectory.exists()) {
 					try {
 						defaultDirectory.mkdir();
 					} catch (Exception ex) {
-						System.out.println("There was an error creating the directory: " + ex.getMessage());
+						System.out.println("There was "
+						+ "an error creating the "
+						+ "directory: "
+						+ ex.getMessage());
 					}
 				}
 
@@ -218,9 +188,8 @@ public class GUIgoFish implements Serializable {
 						+ "loaded");
 						panel.revalidate();
 						background.revalidate();
-						panel.repaint();
-						background.repaint();
-						showCards();
+						updateView();
+						ois.close();
 					} catch (Exception e1) {
 						System.out.println("There was "
 						+ "an error opening the file: "
@@ -233,10 +202,8 @@ public class GUIgoFish implements Serializable {
 		mnFile.add(mntmOpenSave);
 
 		JMenuItem mntmSaveGame = new JMenuItem(new
-				AbstractAction("Save Game"){
-			/**
-			 *
-			 */
+				AbstractAction("Save Game") {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -257,22 +224,36 @@ public class GUIgoFish implements Serializable {
 					}
 				}
 
-				JFileChooser fc = new JFileChooser(defaultDirectory);
-				int returnVal = fc.showSaveDialog(fc.getParent());
+				JFileChooser fc =
+						new JFileChooser(
+							defaultDirectory);
+				int returnVal =
+						fc.showSaveDialog(
+								fc.getParent());
 
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					String saveFile = fc.getSelectedFile().getAbsolutePath().toString();
-					if(!saveFile.contains(".ser")) {
+				if (returnVal
+					== JFileChooser.APPROVE_OPTION) {
+					String saveFile = fc.getSelectedFile()
+							.getAbsolutePath()
+							.toString();
+					if (!saveFile.contains(
+							".ser")) {
 						 saveFile = saveFile + ".ser";
 					}
 
 					try {
-						FileOutputStream fos = new FileOutputStream(saveFile);
-						ObjectOutputStream oos = new ObjectOutputStream(fos);
-						oos.writeObject(game);//!!!<-- is this null?
-						System.out.println("Saved the game successfully!");
+						FileOutputStream fos
+					= new FileOutputStream(saveFile);
+						ObjectOutputStream oos
+						= new ObjectOutputStream(fos);
+						oos.writeObject(game);
+						System.out.println(
+						"Saved the game successfully!");
+						oos.close();
 					} catch (Exception e1) {
-						System.out.println("There was an error saving the file: " + e1.getMessage());
+						System.out.println("There was "
+						+ "an error saving the file: "
+						+ e1.getMessage());
 						e1.printStackTrace();
 					}
 				}
@@ -284,21 +265,11 @@ public class GUIgoFish implements Serializable {
 		mntmEXIT.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				System.exit(0);
-
+				frame.dispose();
 			}
-
 		});
 		mnFile.add(mntmEXIT);
 		frame.getContentPane().setLayout(null);
-
-		JButton btnGoFish = new JButton("Go Fish");
-		btnGoFish.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-			}
-		});
-
 
 		btnStart = new JButton("New Game");
 		btnStart.setBounds((panel.getWidth() / 2) - (89 / 2),
@@ -316,10 +287,11 @@ public class GUIgoFish implements Serializable {
 		});
 		panel.add(btnStart);
 
-
 	}
 
 	/**
+	 * Provides a bounding rectangle which will center the
+	 * image on the screen.
 	 * @param img - the image
 	 * @return A bounding rectangle.
 	 */
@@ -335,6 +307,8 @@ public class GUIgoFish implements Serializable {
 	}
 
 	/**
+	 * Provides a bounding rectangle which will center the
+	 * image on the screen.
 	 * @param width - the width of the image
 	 * @param height - the height of the image
 	 * @return A bounding rectangle.
@@ -350,6 +324,9 @@ public class GUIgoFish implements Serializable {
 
 
 
+	/**
+	 *Creates and updates the card buttons on the screen.
+	 */
 	public void showCards() {
 
 		game.getPlayer().sortHand();
@@ -364,67 +341,94 @@ public class GUIgoFish implements Serializable {
 			ImageIcon card = store.getImages().get(game.getPlayer()
 					.getHand().get(i).toString());
 			Rank rank = game.getPlayer().getHand().get(i).getRank();
-			String key = game.getPlayer().getHand().get(i).toString();
 			JButton cardButton = new JButton(card);
-			cardButton.setBounds(x, y+135, width, height);
+			cardButton.setBounds(x, y + 135,
+					width, height);
 
 			cardButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e) {
-					printTxt("Got any " + rank.toString() + "s?", true);
+				public void actionPerformed(
+						final ActionEvent e) {
+					printTxt("Got any "
+						+ rank.toString() + "s?", true);
 
 					// PLAYER TURN LOGIC
 					if (game.isPlayerTurn()) {
 
-						// Card request = game.getPlayer().getHand().get(i);
-						ArrayList<Card> returnedCards = game.getAi()
+
+						ArrayList<Card> returnedCards =
+								game.getAi()
 								.askCard(rank);
 						if (returnedCards.size() > 0) {
-						printTxt("Yup, here are " + returnedCards.size() +
-			" " + returnedCards.get(0).getRank().toString() + "s!", false);
-							game.getPlayer().setHand(returnedCards);
+						printTxt("Yup, here are "
+						+ returnedCards.size() + " "
+						+ returnedCards.get(0)
+						.getRank().toString()
+						+ "s!", false);
+							game.getPlayer()
+							.setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
 							updateView();
-							game.setPlayerTurn(false);
+							game.setPlayerTurn(
+									false);
 						} else {
-							printTxt("Go Fish!", false);
-							if (game.getPlayer().goFish(rank)) {
-								printTxt("I got my card! Free turn!", true);
-								game.updateGame();
+							printTxt("Go Fish!",
+									false);
+							if (game.getPlayer()
+								.goFish(rank)) {
+								printTxt(
+							"I got my card! "
+							+ "Free turn!", true);
+							game.updateGame();
 								updateView();
 							} else {
-								game.setPlayerTurn(false);
-								game.updateGame();
+						    game.setPlayerTurn(
+						    		false);
+							game.updateGame();
 								updateView();
 							}
 						}
 						// AI TURN LOGIC
 					} else {
-						Rank request = game.getAi().aiTurn();
-						printTxt("Got any " + request.toString() + "s?", false);
-						ArrayList<Card> returnedCards = game.getPlayer()
-								.askCard(request);
+						Rank request = game.getAi()
+								.aiTurn();
+						printTxt("Got any "
+						+ request.toString()
+						+ "s?", false);
+						ArrayList<Card> returnedCards
+						= game.getPlayer()
+							.askCard(request);
 						if (returnedCards.size() > 0) {
-							printTxt("Sure do. Here "
-							+ "are " + returnedCards.size() + " "
-							+ returnedCards.get(0).getRank()
+						printTxt("Sure do. Here "
+						+ "are " + returnedCards
+						.size() + " "
+						+ returnedCards.get(0).getRank()
 							.toString(), true);
-							game.getAi().setHand(returnedCards);
+							game.getAi()
+							.setHand(returnedCards);
 							returnedCards.clear();
 							game.updateGame();
 							updateView();
-							game.setPlayerTurn(true);
+							game.setPlayerTurn(
+								true);
 						} else {
-							printTxt("Go Fish!", true);
-							if (game.getAi().goFish(request)) {
-								printTxt("I got my card! Free turn!", false);
-								game.setPlayerTurn(true);
-								game.updateGame();
+							printTxt(
+						"Go Fish!", true);
+							if (game.getAi()
+							.goFish(request)) {
+							printTxt("I got "
+							+ "my card! Free "
+							+ "turn!", false);
+							game
+							.setPlayerTurn(true);
+							game.updateGame();
 								updateView();
 							} else {
-								game.setPlayerTurn(true);
-								game.updateGame();
+								game
+							.setPlayerTurn(true);
+								game
+								.updateGame();
 								updateView();
 							}
 						}
@@ -438,6 +442,9 @@ public class GUIgoFish implements Serializable {
 		}
 	}
 
+	/**
+	 * Displays the AI's cards.
+	 */
 	public void showAICards() {
 
 		int x = wOffset * 15;
@@ -449,41 +456,27 @@ public class GUIgoFish implements Serializable {
 
 			JLabel cardBackLabel = new JLabel(
 					store.getImages().get("cardBack"));
-			cardBackLabel.setBounds(x, y-135, width, height);
+			cardBackLabel.setBounds(x, y - 135, width, height);
 			background.add(cardBackLabel);
 
 			x += 50;
 		}
 	}
 
-	public void showDeck() {
-
-		int x = 40;
-		int y = (panel.getHeight() / 2) - (3 * store.getImages()
-				.get("cardBack").getIconHeight() / 4);
-		for (int i = 0; i < game.getDeck().getSize(); i++) {
-
-			JLabel cardBackLabel = new JLabel(store.getImages()
-					.get("cardBack"));
-			cardBackLabel.setBounds(x, y, 113, 149);
-			background.add(cardBackLabel);
-
-			x += 25;
-		}
-	}
-
 
 	/**
-	 * @param msg
-	 * @param playerSpeaks
+	 * Displays speech bubbles informing the player
+	 * of game events and the game state.
+	 * @param msg The message to display
+	 * @param playerSpeaks true if the message should be
+	 * displayed in the player's speech bubble.
+	 *
 	 */
 	public void printTxt(final String msg, final boolean playerSpeaks) {
 
-		Timer  timer = new Timer(1500, new ActionListener()
-        {
+		Timer  timer = new Timer(1500, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e)
-            {
+			public void actionPerformed(final ActionEvent e) {
                 updateView();
                 if (playerSpeaks) {
                 	panel.add(youSay);
@@ -492,7 +485,6 @@ public class GUIgoFish implements Serializable {
                     panel.add(theySay);
                 	theySay.setVisible(true);
                 }
-
             }
         });
         timer.setRepeats(false);
@@ -516,9 +508,10 @@ public class GUIgoFish implements Serializable {
 	}
 
 	/**
-	 * reloads all the items back to the panel.
+	 * Updates the view to represent the game state.
 	 */
 	private void updateView() {
+		System.out.println(game.getPlayer().getScore());
 		background.removeAll();
 		panel.add(background);
 		showCards();
@@ -526,8 +519,10 @@ public class GUIgoFish implements Serializable {
 		background.repaint();
 	}
 
+	/** Starts a new game
+	 * discarding the current one. **/
 	private void newGame() {
-		game = new Game(this);
+		game = new Game();
 		updateView();
 	}
 
@@ -540,11 +535,12 @@ public class GUIgoFish implements Serializable {
 	 */
 	public static void main(final String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			GUIgoFish window;
 			@Override
 			public void run() {
 				try {
-					GUIgoFish window = new GUIgoFish();
-					window.frame.setVisible(true);
+					window = new GUIgoFish();
+					GUIgoFish.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -552,50 +548,5 @@ public class GUIgoFish implements Serializable {
 		});
 	}
 
-	/**
-	 * @return
-	 */
-	public JLabel getYourMsg() {
-		return yourMsg;
-	}
 
-	/**
-	 * @param yourMsg
-	 */
-	public void setYourMsg(JLabel yourMsg) {
-		this.yourMsg = yourMsg;
-	}
-
-	/**
-	 * @return
-	 */
-	public JLabel getYourScore() {
-		return yourScore;
-	}
-
-	/**
-	 * @param yourScore
-	 */
-	public void setYourScore(JLabel yourScore) {
-		this.yourScore = yourScore;
-	}
-
-	/**
-	 * @return
-	 */
-	public JLabel getTheirMsg() {
-		return theirMsg;
-	}
-
-	/**
-	 * @param theirMsg
-	 */
-	public void setTheirMsg(JLabel theirMsg) {
-		this.theirMsg = theirMsg;
-	}
-
-	public static void getERROR(){
-JOptionPane.showMessageDialog(frame, "Eggs are not supposed to be green.");
-
-	}
 }

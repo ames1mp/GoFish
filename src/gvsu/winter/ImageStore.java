@@ -15,23 +15,18 @@ import javax.swing.ImageIcon;
  */
 public class ImageStore implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 *A hash map which holds game images as ImageIcons,
 	 *and accesses them with string keys.
 	 */
-	private transient HashMap<String, ImageIcon> images;
+	private HashMap<String, ImageIcon> images;
 
 	/**
 	 * Creates a new ImageStore object, which hold all of the
 	 * images used in the game.
 	 */
-
-
-
 	public ImageStore() {
 		images = new HashMap<String, ImageIcon>();
 		loadImages();
@@ -87,9 +82,6 @@ public class ImageStore implements Serializable {
 						200, 200, Image.SCALE_SMOOTH));
 		images.put("aibub", aibub);
 
-
-
-
 		for (Card c : deck.getDeck()) {
 
 			String key = c.toString();
@@ -104,7 +96,8 @@ public class ImageStore implements Serializable {
 	}
 
 	/**
-	 * @param r
+	 * @param r A bounding rectangle with width and height
+	 * equal to that of the game screen.
 	 */
 	public void loadBackground(final Rectangle r) {
 		ImageIcon background = new ImageIcon(
@@ -114,15 +107,11 @@ public class ImageStore implements Serializable {
 		images.put("background", background);
 	}
 
-
-
 	/**
-	 * @return images the hash map containg the images
+	 * @return images the hash map containing the images
 	 */
 	public HashMap<String, ImageIcon> getImages() {
 		return images;
 	}
-
-
 
 }

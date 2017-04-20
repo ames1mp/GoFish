@@ -143,19 +143,16 @@ public class PlayerTest {
         output = player.askCard(Rank.ACE);
 
         assertEquals(output.size() == expectedOutput.size(), true);
-        assertEquals(output.get(0).getRank()
-                == expectedOutput.get(0).getRank(), true);
-        assertEquals(output.get(1).getRank()
-                == expectedOutput.get(1).getRank(), true);
-        assertEquals(output.get(2).getRank()
-                == expectedOutput.get(2).getRank(), true);
 
-        assertEquals(output.get(0).getSuit()
-                == expectedOutput.get(0).getSuit(), true);
-        assertEquals(output.get(1).getSuit()
-                == expectedOutput.get(1).getSuit(), true);
-        assertEquals(output.get(2).getSuit()
-                == expectedOutput.get(2).getSuit(), true);
+        for (Card c : output) {
+        	int i = output.indexOf(c);
+        	assertEquals(c.getRank()
+        			== expectedOutput.get(i).getRank(), true);
+        	 assertEquals(c.getSuit()
+                     == expectedOutput.get(i).getSuit(), true);
+        }
+
+
     }
 
     /**
@@ -243,6 +240,52 @@ public class PlayerTest {
         player.setHand(hand);
 
         assertEquals(player.hasRankInHand(Rank.THREE), false);
+    }
+
+    /**
+     * test the sortHand method.
+     */
+    @Test
+    public void testSortHand() {
+        Game game = new Game();
+        Player player = new Player(game.getDeck(), game);
+        ArrayList<Card> lHand = new ArrayList<Card>();
+
+        lHand.add(new Card(Suit.HEARTS, Rank.TWO));
+        lHand.add(new Card(Suit.SPADES, Rank.EIGHT));
+        lHand.add(new Card(Suit.DIAMONDS, Rank.ACE));
+        player.setHand(lHand);
+
+
+        lHand = new ArrayList<Card>();
+        lHand.add(new Card(Suit.SPADES, Rank.THREE));
+        lHand.add(new Card(Suit.SPADES, Rank.SEVEN));
+        player.setHand(lHand);
+
+        player.sortHand();
+
+        ArrayList<Card> sortedHand = new ArrayList<Card>();
+        sortedHand.add(new Card(Suit.DIAMONDS, Rank.ACE));
+        sortedHand.add(new Card(Suit.HEARTS, Rank.TWO));
+        sortedHand.add(new Card(Suit.SPADES, Rank.THREE));
+        sortedHand.add(new Card(Suit.SPADES, Rank.SEVEN));
+        sortedHand.add(new Card(Suit.SPADES, Rank.EIGHT));
+
+        assertEquals(player.getHand().get(0).getRank(),
+        		sortedHand.get(0).getRank());
+        }
+
+    /**
+     * test get/set score.
+     */
+    @Test
+    public void score() {
+    	Game game = new Game();
+        Player player = new Player(game.getDeck(), game);
+        int score = 4;
+        player.setScore(score);
+
+        assertEquals(player.getScore(), score);
     }
 
 

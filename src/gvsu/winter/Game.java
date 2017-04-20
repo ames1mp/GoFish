@@ -1,26 +1,19 @@
 package gvsu.winter;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /******************************************************************************
+ *Tracks and updates the game state.
+ *Keeps track of the state of the deck, the player's hand,
+ *the AI's hand
  * @author Lanndon Rose
  * @author Michael Ames
+ * @version Winter 2017
  *****************************************************************************/
 
 public class Game implements Serializable {
 
-	/**
-	 *
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -54,24 +47,13 @@ public class Game implements Serializable {
 	private  AiPlayer ai;
 
 	/**
-	 * instantiates the gui.
-	 */
-	private  GUIgoFish gui;
-
-	private static Game loadGame;
-
-
-	/**
-	 * method for setting the gui up with instances of game aspects.
+	 * Creates a new game, dealing hands to the players.
 	 *
-	 * @param guiC
-	 *            gofish user interface variable
 	 */
-	public Game(final GUIgoFish guiC) {
+	    public Game() {
 		this.deck = new Deck();
 		this.player = new Player(this.deck, this);
 		this.ai = new AiPlayer(this.deck, this);
-		this.gui = guiC;
 
 		// adds seven cards to the players hand
 		for (int i = 0; i < HANDSIZE; ++i) {
@@ -81,12 +63,10 @@ public class Game implements Serializable {
 		for (int i = 0; i < HANDSIZE; ++i) {
 			ai.setHand(deck.drawCard());
 		}
-
-		// gameLoop();
 	}
 
 	/**
-	 * method for determining if it is the player turn or not.
+	 * Method for determining if it is the player turn or not.
 	 *
 	 * @return true or false
 	 */
@@ -95,8 +75,8 @@ public class Game implements Serializable {
 	}
 
 	/**
-	 * method for returning number of same cards needed to gain a point.
-	 *
+	 * method for returning number of cards of the same rank
+	 * needed to gain a point.
 	 * @return BOOKSIZE - number of cards needed to score a point
 	 */
 	public int getBookSize() {
@@ -104,15 +84,12 @@ public class Game implements Serializable {
 	}
 
 	/**
-	 * Method for updating score and tell player they got a point.
+	 * Method for updating score and removing cards from
+	 * the players' hands.
 	 */
 	public void updateGame() {
         player.checkForBook();
 		ai.checkForBook();
-	}
-
-	public static Game getLoadGame(){
-		return loadGame;
 	}
 
 	/**
@@ -137,41 +114,13 @@ public class Game implements Serializable {
 	}
 
 	/**
-	 * sets boolean to true or false depending on whether it is the players turn
-	 * or not.
-	 *
-	 * @param playerTurn
+	 * Sets boolean to true or false depending
+	 * on whether it is the players turn or not.
+	 * @param lplayerTurn
 	 *            boolean
 	 */
-	public void setPlayerTurn(final boolean playerTurn) {
-		this.playerTurn = playerTurn;
+	public void setPlayerTurn(final boolean lplayerTurn) {
+		playerTurn = lplayerTurn;
 	}
 
-	/**
-	 * method for saving game.
-	 */
-	public void writeObject() {
-		try (FileOutputStream file = new FileOutputStream("res/game.ser");
-				BufferedOutputStream buffer = new BufferedOutputStream(file);
-				ObjectOutputStream output = new ObjectOutputStream(buffer);) {
-			output.writeObject(this);
-			output.close();
-		} catch (IOException ex) {
-			GUIgoFish.getERROR();
-			ex.printStackTrace();
-		}
-	}
-
-	static void loadObject() {
-		try (InputStream file = new FileInputStream("res/game.ser");
-				InputStream buffer = new BufferedInputStream(file);
-				ObjectInput input = new ObjectInputStream(buffer);) {
-
-			 loadGame = (Game) input.readObject();
-		} catch (ClassNotFoundException ex) {
-
-		} catch (IOException ex) {
-
-		}
-	}
 }
